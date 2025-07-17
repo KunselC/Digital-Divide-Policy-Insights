@@ -1,0 +1,13 @@
+flask==3.0.0
+flask-cors==4.0.0
+streamlit==1.29.0
+pandas>=2.3.0
+numpy>=1.26.0
+plotly==5.17.0
+requests==2.31.0
+python-dotenv==1.0.0
+openai==1.6.1
+langchain==0.1.0
+chromadb==0.4.18
+scikit-learn>=1.4.0
+altair==5.2.0
