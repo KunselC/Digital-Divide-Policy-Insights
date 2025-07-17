@@ -5,13 +5,13 @@
 echo "🚀 Starting Digital Divide Policy Insights platform..."
 
 # Check if virtual environment exists
-if [ ! -d "venv" ]; then
+if [ ! -d ".venv" ]; then
     echo "❌ Virtual environment not found. Please run setup.sh first."
     exit 1
 fi
 
-# Activate virtual environment
-source venv/bin/activate
+# Use the configured Python environment
+PYTHON_CMD="/Users/kunselchodak/Class Project Files/Digital-Divide-Policy-Insights/.venv/bin/python"
 
 # Check if .env file exists
 if [ ! -f ".env" ]; then
@@ -23,7 +23,7 @@ fi
 start_api() {
     echo "🔧 Starting Flask API server..."
     cd api
-    python app.py &
+    "$PYTHON_CMD" app.py &
     API_PID=$!
     cd ..
     echo "✅ API server started (PID: $API_PID)"
@@ -32,7 +32,7 @@ start_api() {
 # Function to start Streamlit frontend
 start_frontend() {
     echo "🖥️ Starting Streamlit frontend..."
-    streamlit run frontend/app.py &
+    "$PYTHON_CMD" -m streamlit run frontend/app.py --server.port 8501 --server.address 0.0.0.0 --server.headless true &
     FRONTEND_PID=$!
     echo "✅ Frontend started (PID: $FRONTEND_PID)"
 }
