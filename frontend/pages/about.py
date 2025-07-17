@@ -6,8 +6,13 @@ import streamlit as st
 
 
 def render_about():
-    """Render about page with project information."""
-    st.header("ℹ️ About This Project")
+    """Render professional about page with project information."""
+    from components.ui_components import render_section_header, render_info_box
+    
+    render_section_header(
+        "About This Project", 
+        "Learn more about the Digital Divide Policy Insights platform and its mission"
+    )
     
     _render_project_overview()
     _render_key_features()
@@ -18,28 +23,82 @@ def render_about():
 
 
 def _render_project_overview():
-    """Render project overview section."""
-    st.markdown("""
-    ## Digital Divide Policy Insights Platform
+    """Render professional project overview section."""
+    from components.ui_components import render_info_box
     
-    This platform provides comprehensive analysis of technology policies aimed at 
-    bridging the digital divide in the United States. Our goal is to make policy 
-    effectiveness data accessible and understandable for researchers, policymakers, 
+    st.markdown("""
+    ## 🎯 Mission & Vision
+    
+    The **Digital Divide Policy Insights Platform** provides comprehensive analysis of technology policies 
+    aimed at bridging the digital divide in the United States. Our mission is to make policy 
+    effectiveness data accessible, understandable, and actionable for researchers, policymakers, 
     and the general public.
+    
+    ### Why This Matters
+    
+    The digital divide affects millions of Americans, limiting access to education, healthcare, 
+    employment opportunities, and essential services. By analyzing policy effectiveness through 
+    data-driven insights, we can help identify what works and guide future policy decisions.
     """)
+    
+    render_info_box(
+        "🎯 <strong>Our Goal:</strong> To bridge the gap between policy implementation and measurable outcomes in digital equity initiatives.",
+        "info"
+    )
 
 
 def _render_key_features():
-    """Render key features section."""
-    st.markdown("""
-    ### Key Features:
+    """Render professional key features section."""
+    from components.ui_components import render_section_header
     
-    - **Policy Dashboard**: Overview of all digital divide policies and their effectiveness scores
-    - **Trend Analysis**: Historical data showing the impact of policies on digital access metrics
-    - **AI Chatbot**: Interactive assistant for policy questions and explanations
-    - **Data Visualization**: Interactive charts and graphs showing policy effectiveness
-    - **Demographics Analysis**: Breakdown of digital access by income, geography, and age
-    """)
+    render_section_header("Platform Features", "Comprehensive tools for policy analysis and insights")
+    
+    # Create feature cards in columns
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.markdown("""
+        <div class="metric-card">
+            <h4>📊 Policy Dashboard</h4>
+            <p>Comprehensive overview of all digital divide policies with real-time effectiveness scores and implementation status.</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown("""
+        <div class="metric-card">
+            <h4>📈 Trend Analysis</h4>
+            <p>Historical data visualization showing the measurable impact of policies on digital access metrics over time.</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown("""
+        <div class="metric-card">
+            <h4>🤖 AI Assistant</h4>
+            <p>Interactive chatbot powered by advanced AI to answer policy questions and provide detailed explanations.</p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col2:
+        st.markdown("""
+        <div class="metric-card">
+            <h4>📋 Policy Analysis</h4>
+            <p>Deep-dive analysis of individual policies including effectiveness metrics, implementation challenges, and outcomes.</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown("""
+        <div class="metric-card">
+            <h4>🎯 Demographics Breakdown</h4>
+            <p>Detailed analysis of digital access disparities by income level, geographic location, and age demographics.</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown("""
+        <div class="metric-card">
+            <h4>📊 Data Visualization</h4>
+            <p>Interactive charts and graphs with professional styling that make complex policy data easy to understand.</p>
+        </div>
+        """, unsafe_allow_html=True)
 
 
 def _render_policies_analyzed():
