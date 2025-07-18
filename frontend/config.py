@@ -12,7 +12,7 @@ API_BASE_URL = os.getenv('API_BASE_URL', 'http://localhost:5001')
 
 # App Configuration
 APP_TITLE = "Digital Divide Policy Insights"
-APP_ICON = "📊"
+APP_ICON = None # This is no longer used for the main icon
 APP_SUBTITLE = "Analyzing Technology Policies and Their Effectiveness in Bridging the Digital Divide"
 
 # Theme Configuration
@@ -36,7 +36,6 @@ PAGES = [
 # Streamlit Configuration
 STREAMLIT_CONFIG = {
     "page_title": APP_TITLE,
-    "page_icon": APP_ICON,
     "layout": "wide",
     "initial_sidebar_state": "expanded",
     "menu_items": {

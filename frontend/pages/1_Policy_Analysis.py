@@ -6,12 +6,12 @@ import streamlit as st
 import plotly.graph_objects as go
 
 from utils.api_client import api_client
-from components.ui_components import render_policy_card, format_metric_value
+from components.ui_components import render_policy_card, format_metric_value, render_section_header
 
 
-def render_policy_analysis():
+def render_policy_analysis_page():
     """Render detailed policy analysis page."""
-    st.header("🏛️ Policy Analysis")
+    render_section_header("Policy Analysis", "Deep-dive into individual policy effectiveness and metrics.")
     
     policies_data = api_client.get("/api/policies/")
     
@@ -85,3 +85,9 @@ def _render_policy_metrics(policy: dict):
             formatted_name = metric_name.replace('_', ' ').title()
             formatted_value = format_metric_value(metric_value)
             st.metric(label=formatted_name, value=formatted_value)
+
+if __name__ == "__main__":
+    from components.ui_components import load_custom_css
+    st.set_page_config(layout="wide", page_title="Policy Analysis - Digital Divide Policy Insights", page_icon="frontend/assets/icons/policy.svg")
+    load_custom_css()
+    render_policy_analysis_page()

@@ -5,13 +5,6 @@ UI styling and component utilities for the Digital Divide Policy frontend.
 import streamlit as st
 
 
-"""
-UI styling and component utilities for the Digital Divide Policy frontend.
-"""
-
-import streamlit as st
-
-
 def load_custom_css():
     """Load professional custom CSS styles for the application."""
     st.markdown("""
@@ -21,31 +14,36 @@ def load_custom_css():
         
         /* Global Variables */
         :root {
-            --primary-color: #2563eb;
-            --primary-dark: #1d4ed8;
-            --secondary-color: #64748b;
-            --accent-color: #0ea5e9;
-            --success-color: #059669;
-            --warning-color: #d97706;
-            --error-color: #dc2626;
-            --background-primary: #ffffff;
-            --background-secondary: #f8fafc;
-            --background-tertiary: #f1f5f9;
-            --text-primary: #0f172a;
-            --text-secondary: #475569;
-            --text-muted: #64748b;
-            --border-color: #e2e8f0;
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            --radius-sm: 6px;
+            --primary-color: #4A90E2; /* A more professional blue */
+            --primary-dark: #357ABD;
+            --secondary-color: #50E3C2; /* A complementary teal */
+            --accent-color: #F5A623; /* A warm accent color */
+            --success-color: #7ED321;
+            --warning-color: #F8E71C;
+            --error-color: #D0021B;
+            --background-primary: #FFFFFF;
+            --background-secondary: #F7F9FC;
+            --background-tertiary: #EFF2F5;
+            --text-primary: #4A4A4A;
+            --text-secondary: #9B9B9B;
+            --text-muted: #B8B8B8;
+            --border-color: #E6E6E6;
+            --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 8px 0 rgba(0, 0, 0, 0.07);
+            --shadow-lg: 0 10px 20px 0 rgba(0, 0, 0, 0.07);
+            --radius-sm: 4px;
             --radius-md: 8px;
-            --radius-lg: 12px;
+            --radius-lg: 16px;
         }
         
         /* Base Styles */
+        body {
+            background-color: var(--background-secondary);
+        }
+        
         .stApp {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--background-secondary);
         }
         
         /* Hide Streamlit Branding */
@@ -57,272 +55,188 @@ def load_custom_css():
         .main .block-container {
             padding-top: 2rem;
             padding-bottom: 2rem;
-            max-width: 1200px;
+            max-width: 1280px; /* Wider for a more modern feel */
         }
         
         /* Professional Header */
         .main-header {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-            color: white;
+            background: var(--background-primary);
+            color: var(--text-primary);
             padding: 3rem 2rem;
             border-radius: var(--radius-lg);
             margin-bottom: 2.5rem;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-            box-shadow: var(--shadow-lg);
-        }
-        
-        .main-header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="white" opacity="0.1"><polygon points="0,0 0,100 1000,80 1000,0"/></svg>');
-            background-size: cover;
+            text-align: left; /* Align left for a more professional look */
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-md);
         }
         
         .main-header h1 {
-            font-size: 2.5rem;
+            font-size: 2.2rem;
             font-weight: 700;
             margin: 0 0 0.5rem 0;
-            position: relative;
-            z-index: 1;
         }
         
         .main-header p {
             font-size: 1.1rem;
             font-weight: 400;
             margin: 0;
-            opacity: 0.9;
-            position: relative;
-            z-index: 1;
+            color: var(--text-secondary);
         }
         
         /* Professional Cards */
         .metric-card {
             background: var(--background-primary);
             padding: 1.5rem;
-            border-radius: var(--radius-lg);
+            border-radius: var(--radius-md);
             border: 1px solid var(--border-color);
             margin: 1rem 0;
-            box-shadow: var(--shadow-sm);
+            box-shadow: none;
             transition: all 0.2s ease;
             position: relative;
         }
         
         .metric-card:hover {
             box-shadow: var(--shadow-md);
-            transform: translateY(-2px);
-        }
-        
-        .metric-card::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 4px;
-            background: var(--primary-color);
-            border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+            transform: translateY(-3px);
         }
         
         .policy-card {
             background: var(--background-primary);
             padding: 2rem;
-            border-radius: var(--radius-lg);
+            border-radius: var(--radius-md);
             border: 1px solid var(--border-color);
             margin: 1.5rem 0;
-            box-shadow: var(--shadow-sm);
+            box-shadow: none;
             transition: all 0.2s ease;
             position: relative;
+            height: 100%; /* Ensure cards in a row have same height */
         }
         
         .policy-card:hover {
             box-shadow: var(--shadow-md);
-            transform: translateY(-2px);
-        }
-        
-        .policy-card::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 4px;
-            background: var(--success-color);
-            border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+            transform: translateY(-3px);
         }
         
         .policy-card h3 {
             color: var(--text-primary);
             font-weight: 600;
             margin: 0 0 1rem 0;
-            font-size: 1.25rem;
+            font-size: 1.15rem;
         }
         
         .policy-card p {
             color: var(--text-secondary);
             margin: 0.5rem 0;
             line-height: 1.6;
+            font-size: 0.95rem;
         }
         
         /* Status Badges */
         .status-badge {
             display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border-radius: 9999px;
-            font-size: 0.875rem;
-            font-weight: 500;
+            padding: 0.3rem 0.8rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.8rem;
+            font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.025em;
+            letter-spacing: 0.05em;
         }
         
         .status-active {
-            background: #dcfce7;
-            color: #166534;
+            background: #E4F8E2;
+            color: #4CAF50;
+            border: 1px solid #4CAF50;
         }
         
         .status-pending {
-            background: #fef3c7;
-            color: #92400e;
+            background: #FFF9C4;
+            color: #FFC107;
+            border: 1px solid #FFC107;
         }
         
         .status-inactive {
-            background: #fee2e2;
-            color: #991b1b;
+            background: #FFEBEE;
+            color: #F44336;
+            border: 1px solid #F44336;
         }
         
         /* Chat Container */
         .chat-container {
-            background: var(--background-secondary);
+            background: var(--background-primary);
+            border-radius: var(--radius-lg);
             padding: 1.5rem;
-            border-radius: var(--radius-lg);
             border: 1px solid var(--border-color);
-            margin: 1.5rem 0;
         }
         
-        /* Professional Navigation */
-        .nav-container {
-            background: var(--background-primary);
-            border-radius: var(--radius-lg);
-            padding: 1rem;
-            margin-bottom: 2rem;
-            border: 1px solid var(--border-color);
-            box-shadow: var(--shadow-sm);
+        /* Section Headers */
+        .section-header {
+            margin-top: 3rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--border-color);
         }
         
-        /* Sidebar Styling */
-        .css-1d391kg {
-            background: var(--background-secondary);
-        }
-        
-        .css-1d391kg .css-10trblm {
-            color: var(--text-primary);
+        .section-header h2 {
+            font-size: 1.8rem;
             font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
         }
         
-        /* Metrics Styling */
-        [data-testid="metric-container"] {
-            background: var(--background-primary);
-            border: 1px solid var(--border-color);
-            padding: 1rem;
+        .section-header p {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+        }
+        
+        /* Custom Selectbox */
+        .stSelectbox > div {
             border-radius: var(--radius-md);
-            box-shadow: var(--shadow-sm);
-            transition: all 0.2s ease;
+            border: 1px solid var(--border-color);
+            background: var(--background-primary);
         }
         
-        [data-testid="metric-container"]:hover {
-            box-shadow: var(--shadow-md);
-            transform: translateY(-1px);
+        /* Custom Metric Styles */
+        .stMetric {
+            background-color: var(--background-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            text-align: center;
         }
         
         /* Plotly Chart Styling */
-        .js-plotly-plot .plotly .modebar {
-            background: transparent !important;
-        }
-        
-        .js-plotly-plot .plotly .modebar-btn {
-            color: var(--text-muted) !important;
-        }
-        
-        /* Professional Tables */
-        .dataframe {
-            border: none !important;
-            border-radius: var(--radius-md);
+        .plotly-chart {
+            border-radius: var(--radius-lg);
             overflow: hidden;
-            box-shadow: var(--shadow-sm);
         }
         
-        .dataframe th {
-            background: var(--background-tertiary) !important;
-            color: var(--text-primary) !important;
-            font-weight: 600 !important;
-            border: none !important;
-            padding: 1rem !important;
-        }
-        
-        .dataframe td {
-            border: none !important;
-            padding: 0.75rem 1rem !important;
-            border-bottom: 1px solid var(--border-color) !important;
-        }
-        
-        /* Buttons */
-        .stButton > button {
-            background: var(--primary-color);
-            color: white;
-            border: none;
+        /* Info Box */
+        .info-box {
+            padding: 1.5rem;
             border-radius: var(--radius-md);
-            padding: 0.75rem 1.5rem;
-            font-weight: 500;
-            transition: all 0.2s ease;
-            box-shadow: var(--shadow-sm);
+            margin: 1rem 0;
+            border-left: 5px solid;
         }
         
-        .stButton > button:hover {
-            background: var(--primary-dark);
-            box-shadow: var(--shadow-md);
-            transform: translateY(-1px);
+        .info-box-info {
+            background-color: #E7F3FE;
+            border-color: var(--primary-color);
         }
         
-        /* Select Boxes */
-        .stSelectbox > div > div > div {
-            background: var(--background-primary);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-md);
+        .info-box-success {
+            background-color: #E4F8E2;
+            border-color: var(--success-color);
         }
         
-        /* Text Inputs */
-        .stTextInput > div > div > input {
-            background: var(--background-primary);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-md);
-            color: var(--text-primary);
+        .info-box-warning {
+            background-color: #FFF9C4;
+            border-color: var(--warning-color);
         }
         
-        /* Success/Error Messages */
-        .stAlert > div {
-            border-radius: var(--radius-md);
-            border: none;
-            box-shadow: var(--shadow-sm);
-        }
-        
-        /* Mobile Responsiveness */
-        @media (max-width: 768px) {
-            .main-header h1 {
-                font-size: 2rem;
-            }
-            
-            .main-header p {
-                font-size: 1rem;
-            }
-            
-            .policy-card, .metric-card {
-                padding: 1.25rem;
-            }
+        .info-box-error {
+            background-color: #FFEBEE;
+            border-color: var(--error-color);
         }
     </style>
     """, unsafe_allow_html=True)

@@ -7,12 +7,12 @@ from typing import List, Dict
 
 from utils.api_client import api_client
 from config import CHATBOT_SUGGESTIONS
+from components.ui_components import render_section_header
 
 
-def render_chatbot():
+def render_chatbot_page():
     """Render AI-powered policy chatbot page."""
-    st.header("🤖 AI Policy Assistant")
-    st.markdown("Ask me anything about digital divide policies and their effectiveness!")
+    render_section_header("AI Policy Assistant", "Ask me anything about digital divide policies and their effectiveness!")
     
     _initialize_chat_session()
     _render_chat_interface()
@@ -99,23 +99,19 @@ def _render_response_suggestions(suggestions: List[str]):
     for i, suggestion in enumerate(suggestions):
         button_key = f"suggestion_{len(st.session_state.messages)}_{i}"
         if st.button(suggestion, key=button_key):
-            st.session_state.messages.append({"role": "user", "content": suggestion})
-            st.experimental_rerun()
+            _handle_user_message(suggestion)
 
 
 def _render_sidebar_suggestions():
-    """Render quick start suggestions in sidebar."""
-    st.sidebar.subheader("Quick Questions")
-    
-    for i, suggestion in enumerate(CHATBOT_SUGGESTIONS):
-        button_key = f"sidebar_{suggestion}_{i}"
-        if st.sidebar.button(suggestion, key=button_key):
-            st.session_state.messages.append({"role": "user", "content": suggestion})
-            st.experimental_rerun()
+    """Render suggested questions in the sidebar."""
+    with st.sidebar:
+        st.subheader("Try asking:")
+        for suggestion in CHATBOT_SUGGESTIONS:
+            if st.button(suggestion, key=f"sidebar_{suggestion}"):
+                _handle_user_message(suggestion)
 
-
-def _clear_chat_history():
-    """Clear chat history (utility function)."""
-    if st.sidebar.button("Clear Chat History"):
-        st.session_state.messages = []
-        st.experimental_rerun()
+if __name__ == "__main__":
+    from components.ui_components import load_custom_css
+    st.set_page_config(layout="wide", page_title="AI Chatbot - Digital Divide Policy Insights", page_icon="frontend/assets/icons/chatbot.svg")
+    load_custom_css()
+    render_chatbot_page()

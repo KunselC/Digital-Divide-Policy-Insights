@@ -7,11 +7,12 @@ import pandas as pd
 import plotly.express as px
 
 from utils.api_client import api_client
+from components.ui_components import render_section_header
 
 
-def render_data_trends():
+def render_data_trends_page():
     """Render data trends and correlation analysis page."""
-    st.header("📊 Data Trends & Analysis")
+    render_section_header("Data Trends & Analysis", "Explore trends, demographics, and correlations in digital divide data.")
     
     trends_data = api_client.get("/api/data/trends")
     correlation_data = api_client.get("/api/data/correlation")
@@ -63,10 +64,9 @@ def _render_trend_metrics(indicator: str, trend: dict):
         )
     
     with col4:
-        direction_emoji = "📈" if trend['trend_direction'] == "increasing" else "📉"
         st.metric(
             label="Trend",
-            value=f"{direction_emoji} {trend['trend_direction'].title()}"
+            value=f"{trend['trend_direction'].title()}"
         )
 
 
@@ -99,38 +99,23 @@ def _render_income_analysis(income_data: dict):
     income_df = pd.DataFrame(income_data).T.reset_index()
     income_df.columns = ['Income Level'] + list(income_df.columns[1:])
     
-    # Ensure we have the expected columns
-    if 'broadband_access' in income_df.columns and 'digital_literacy' in income_df.columns:
-        fig = px.bar(
-            income_df,
-            x='Income Level',
-            y=['broadband_access', 'digital_literacy'],
-            title="Digital Access by Income Level",
-            barmode='group',
-            labels={'value': 'Percentage', 'variable': 'Metric'}
-        )
-        st.plotly_chart(fig, use_container_width=True)
-    else:
-        st.warning("Income data does not contain expected metrics.")
+    fig = px.bar(income_df, x='Income Level', y='internet_access', 
+                 title="Internet Access by Income Level",
+                 labels={'internet_access': 'Internet Access (%)'})
+    st.plotly_chart(fig, use_container_width=True)
 
 
-def _render_geographic_analysis(geographic_data: dict):
+def _render_geographic_analysis(geo_data: dict):
     """Render geographic analysis chart."""
-    st.subheader("Digital Access by Geographic Region")
+    st.subheader("Digital Access by Geographic Location")
     
-    geo_df = pd.DataFrame(geographic_data).T.reset_index()
-    geo_df.columns = ['Region'] + list(geo_df.columns[1:])
+    geo_df = pd.DataFrame(geo_data).T.reset_index()
+    geo_df.columns = ['Location'] + list(geo_df.columns[1:])
     
-    if 'broadband_access' in geo_df.columns:
-        fig = px.bar(
-            geo_df,
-            x='Region',
-            y='broadband_access',
-            title="Broadband Access by Geographic Region",
-            color='broadband_access',
-            color_continuous_scale='viridis'
-        )
-        st.plotly_chart(fig, use_container_width=True)
+    fig = px.pie(geo_df, names='Location', values='broadband_penetration', 
+                 title="Broadband Penetration by Location",
+                 hole=0.3)
+    st.plotly_chart(fig, use_container_width=True)
 
 
 def _render_age_analysis(age_data: dict):
@@ -140,27 +125,28 @@ def _render_age_analysis(age_data: dict):
     age_df = pd.DataFrame(age_data).T.reset_index()
     age_df.columns = ['Age Group'] + list(age_df.columns[1:])
     
-    if 'digital_literacy' in age_df.columns:
-        fig = px.line(
-            age_df,
-            x='Age Group',
-            y='digital_literacy',
-            title="Digital Literacy by Age Group",
-            markers=True
-        )
-        st.plotly_chart(fig, use_container_width=True)
+    fig = px.funnel(age_df, x='Age Group', y='digital_literacy_rate',
+                    title="Digital Literacy Rate by Age Group")
+    st.plotly_chart(fig, use_container_width=True)
 
 
 def _render_correlation_analysis(correlation_data: dict):
-    """Render correlation analysis."""
-    st.subheader("Policy Correlation Analysis")
+    """Render correlation analysis heatmap."""
+    st.subheader("Correlation Analysis")
     
-    correlations = correlation_data.get('correlations', {})
-    if correlations:
-        for metric, correlation in correlations.items():
-            st.metric(
-                label=f"{metric.replace('_', ' ').title()} Correlation",
-                value=f"{correlation:.3f}"
-            )
-    else:
-        st.info("No correlation data available.")
+    corr_matrix = correlation_data.get('correlation_matrix')
+    if not corr_matrix:
+        st.warning("No correlation data available.")
+        return
+        
+    df = pd.DataFrame(corr_matrix)
+    
+    fig = px.imshow(df, text_auto=True, aspect="auto",
+                    title="Correlation Matrix of Digital Divide Indicators")
+    st.plotly_chart(fig, use_container_width=True)
+
+if __name__ == "__main__":
+    from components.ui_components import load_custom_css
+    st.set_page_config(layout="wide", page_title="Data Trends - Digital Divide Policy Insights", page_icon="frontend/assets/icons/trends.svg")
+    load_custom_css()
+    render_data_trends_page()
