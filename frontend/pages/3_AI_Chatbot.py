@@ -1,18 +1,27 @@
 """
-AI chatbot page for Digital Divide Policy Insights.
+AI Chatbot Page
 """
 
 import streamlit as st
 from typing import List, Dict
+import sys
+import os
+
+# Add the parent directory to the Python path for module imports
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from utils.api_client import api_client
 from config import CHATBOT_SUGGESTIONS
-from components.ui_components import render_section_header
+from components.ui_components import display_page_header, load_custom_css, display_interactive_background
 
 
 def render_chatbot_page():
     """Render AI-powered policy chatbot page."""
-    render_section_header("AI Policy Assistant", "Ask me anything about digital divide policies and their effectiveness!")
+    display_page_header(
+        title="AI Policy Assistant", 
+        subtitle="Ask questions about digital divide policies in plain English.",
+        icon_name="chatbot.svg"
+    )
     
     _initialize_chat_session()
     _render_chat_interface()
@@ -22,7 +31,9 @@ def render_chatbot_page():
 def _initialize_chat_session():
     """Initialize chat session state."""
     if "messages" not in st.session_state:
-        st.session_state.messages = []
+        st.session_state.messages = [
+            {"role": "assistant", "content": "Hi! I'm here to help you understand digital divide policies. What would you like to know?"}
+        ]
 
 
 def _render_chat_interface():
@@ -33,7 +44,7 @@ def _render_chat_interface():
             st.markdown(message["content"])
     
     # Handle new user input
-    if prompt := st.chat_input("Ask about digital divide policies..."):
+    if prompt := st.chat_input("What do you want to know?"):
         _handle_user_message(prompt)
 
 
@@ -75,7 +86,7 @@ def _get_bot_response(prompt: str) -> str:
         
         if response_data:
             bot_response = response_data.get('bot_response', 
-                                           'Sorry, I could not process your request.')
+                                           "Sorry, I couldn't find an answer to that.")
             
             # Handle suggestions if available
             suggestions = response_data.get('suggestions', [])
@@ -84,7 +95,7 @@ def _get_bot_response(prompt: str) -> str:
             
             return bot_response
         else:
-            return "Sorry, I'm having trouble connecting to the server. Please try again later."
+            return "Sorry, I'm having trouble connecting. Please try again in a moment."
 
 
 def _render_response_suggestions(suggestions: List[str]):
@@ -94,7 +105,7 @@ def _render_response_suggestions(suggestions: List[str]):
     Args:
         suggestions: List of suggested follow-up questions
     """
-    st.markdown("**You might also ask:**")
+    st.markdown("**Here are some other questions you could ask:**")
     
     for i, suggestion in enumerate(suggestions):
         button_key = f"suggestion_{len(st.session_state.messages)}_{i}"
@@ -103,15 +114,27 @@ def _render_response_suggestions(suggestions: List[str]):
 
 
 def _render_sidebar_suggestions():
-    """Render suggested questions in the sidebar."""
+    """Render sidebar with suggested conversation starters."""
     with st.sidebar:
-        st.subheader("Try asking:")
+        st.subheader("Don't know where to start?")
+        st.write("Try one of these conversation starters:")
+        
         for suggestion in CHATBOT_SUGGESTIONS:
             if st.button(suggestion, key=f"sidebar_{suggestion}"):
                 _handle_user_message(suggestion)
 
-if __name__ == "__main__":
-    from components.ui_components import load_custom_css
-    st.set_page_config(layout="wide", page_title="AI Chatbot - Digital Divide Policy Insights", page_icon="frontend/assets/icons/chatbot.svg")
+
+def main():
+    """Main function to set up and render the page."""
+    from components.ui_components import load_custom_css, display_interactive_background
+    
+    st.set_page_config(
+        page_title="AI Chatbot - NetEquity",
+        layout="wide"
+    )
     load_custom_css()
+    display_interactive_background()
     render_chatbot_page()
+
+if __name__ == "__main__":
+    main()

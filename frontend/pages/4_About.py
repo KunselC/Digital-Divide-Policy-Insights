@@ -1,17 +1,30 @@
 """
-About page for Digital Divide Policy Insights.
+About Page
 """
 
 import streamlit as st
+import sys
+import os
+
+# Add the parent directory to the Python path for module imports
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from components.ui_components import (
+    display_page_header, 
+    render_info_box, 
+    render_section_header, 
+    load_custom_css,
+    display_interactive_background,
+    render_feature_card
+)
 
 
 def render_about_page():
     """Render professional about page with project information."""
-    from components.ui_components import render_section_header, render_info_box
-    
-    render_section_header(
-        "About This Project", 
-        "Learn more about the Digital Divide Policy Insights platform and its mission"
+    display_page_header(
+        title="About NetEquity", 
+        subtitle="What this platform is all about.",
+        icon_name="about.svg"
     )
     
     _render_project_overview()
@@ -24,81 +37,66 @@ def render_about_page():
 
 def _render_project_overview():
     """Render professional project overview section."""
-    from components.ui_components import render_info_box
     
     st.markdown("""
-    ## Mission & Vision
+    ## Our Mission
     
-    The **Digital Divide Policy Insights Platform** provides comprehensive analysis of technology policies 
-    aimed at bridging the digital divide in the United States. Our mission is to make policy 
-    effectiveness data accessible, understandable, and actionable for researchers, policymakers, 
-    and the general public.
+    We built **NetEquity** to make data about the digital divide easier for everyone to understand. 
+    Our goal is to show how different policies are working (or not working) so that we can find 
+    better ways to ensure everyone has access to technology.
     
-    ### Why This Matters
+    ### Why it Matters
     
-    The digital divide affects millions of Americans, limiting access to education, healthcare, 
-    employment opportunities, and essential services. By analyzing policy effectiveness through 
-    data-driven insights, we can help identify what works and guide future policy decisions.
+    Being disconnected today means missing out on school, jobs, and even healthcare. 
+    By looking at the data, we can help policymakers make smarter decisions and build a more equitable future.
     """)
     
     render_info_box(
-        "<strong>Our Goal:</strong> To bridge the gap between policy implementation and measurable outcomes in digital equity initiatives.",
+        "<strong>Our Goal:</strong> To connect policy decisions to real-world results.",
         "info"
     )
 
 
 def _render_key_features():
     """Render professional key features section."""
-    from components.ui_components import render_section_header
-    
-    render_section_header("Platform Features", "Comprehensive tools for policy analysis and insights")
+    render_section_header("What You Can Do Here", "A quick tour of the platform's features")
     
     # Create feature cards in columns
     col1, col2 = st.columns(2)
     
     with col1:
-        st.markdown("""
-        <div class="metric-card">
-            <h4>Policy Dashboard</h4>
-            <p>Comprehensive overview of all digital divide policies with real-time effectiveness scores and implementation status.</p>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown("""
-        <div class="metric-card">
-            <h4>Trend Analysis</h4>
-            <p>Historical data visualization showing the measurable impact of policies on digital access metrics over time.</p>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown("""
-        <div class="metric-card">
-            <h4>AI Assistant</h4>
-            <p>Interactive chatbot powered by advanced AI to answer policy questions and provide detailed explanations.</p>
-        </div>
-        """, unsafe_allow_html=True)
+        render_feature_card(
+            "View the Dashboard",
+            "Get a quick overview of all policies and their effectiveness scores.",
+            "dashboard.svg"
+        )
+        render_feature_card(
+            "Explore Trends",
+            "See how digital access has changed over time for different groups.",
+            "data-trends.svg"
+        )
+        render_feature_card(
+            "Chat with the AI",
+            "Ask questions in plain English to get simple answers about complex policies.",
+            "chatbot.svg"
+        )
     
     with col2:
-        st.markdown("""
-        <div class="metric-card">
-            <h4>Policy Analysis</h4>
-            <p>Deep-dive analysis of individual policies including effectiveness metrics, implementation challenges, and outcomes.</p>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown("""
-        <div class="metric-card">
-            <h4>Demographics Breakdown</h4>
-            <p>Detailed analysis of digital access disparities by income level, geographic location, and age demographics.</p>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown("""
-        <div class="metric-card">
-            <h4>Data Visualization</h4>
-            <p>Interactive charts and graphs with professional styling that make complex policy data easy to understand.</p>
-        </div>
-        """, unsafe_allow_html=True)
+        render_feature_card(
+            "Analyze Policies",
+            "Dig into the details of specific policies to see what makes them work.",
+            "policy-analysis.svg"
+        )
+        render_feature_card(
+            "Check Demographics",
+            "See how the digital divide affects people based on income, location, and age.",
+            "trends.svg"
+        )
+        render_feature_card(
+            "Visualize Data",
+            "Interact with charts and graphs that bring the data to life.",
+            "policy.svg"
+        )
 
 
 def _render_policies_analyzed():
@@ -219,8 +217,17 @@ def _render_contact_info():
         - Security considerations
         """)
 
-if __name__ == "__main__":
-    from components.ui_components import load_custom_css
-    st.set_page_config(layout="wide", page_title="About - Digital Divide Policy Insights", page_icon="frontend/assets/icons/about.svg")
+def main():
+    """Main function to set up and render the page."""
+    from components.ui_components import load_custom_css, display_interactive_background
+    
+    st.set_page_config(
+        page_title="About - NetEquity",
+        layout="wide"
+    )
     load_custom_css()
+    display_interactive_background()
     render_about_page()
+
+if __name__ == "__main__":
+    main()
