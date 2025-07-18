@@ -36,9 +36,11 @@ def register_blueprints(app):
     """Register all application blueprints."""
     from routes.policies import policies_bp
     from routes.data import data_bp
+    from routes.chatbot import chatbot_bp
     
     app.register_blueprint(policies_bp, url_prefix='/api/policies')
     app.register_blueprint(data_bp, url_prefix='/api/data')
+    app.register_blueprint(chatbot_bp, url_prefix='/api/chatbot')
 
 def register_error_handlers(app):
     """Register global error handlers."""
@@ -63,6 +65,7 @@ def index():
         'endpoints': {
             'policies': '/api/policies',
             'data': '/api/data',
+            'chatbot': '/api/chatbot',
             'health': '/health'
         }
     })

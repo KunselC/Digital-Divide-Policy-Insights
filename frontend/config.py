@@ -29,6 +29,8 @@ PAGES = [
     "Dashboard",
     "Policy Analysis", 
     "Data Trends",
+    "AI Chatbot",
+    "ML Prediction",
     "About"
 ]
 
@@ -43,3 +45,11 @@ STREAMLIT_CONFIG = {
         'About': None
     }
 }
+
+# Quick questions for chatbot
+CHATBOT_SUGGESTIONS = [
+    "What is the Digital Equity Act?",
+    "How effective are the policies?",
+    "Compare all policies",
+    "Show policy statistics"
+]
