@@ -131,6 +131,12 @@ def load_custom_css():
             font-size: 0.95rem;
         }
         
+        /* Compact Policy Card */
+        .policy-card.compact {
+            padding: 1rem;
+            font-size: 0.9rem;
+        }
+        
         /* Status Badges */
         .status-badge {
             display: inline-block;
@@ -252,24 +258,27 @@ def render_header(title: str, subtitle: str):
     """
     st.markdown(f"""
     <div class="main-header">
-        <h1>📊 {title}</h1>
+        <h1>{title}</h1>
         <p>{subtitle}</p>
     </div>
     """, unsafe_allow_html=True)
 
 
-def render_policy_card(policy: dict):
+def render_policy_card(policy: dict, is_compact: bool = False):
     """
     Render a professional policy information card.
     
     Args:
         policy: Policy data dictionary
+        is_compact: If True, renders a smaller version for spotlights
     """
     status = policy.get('status', 'unknown').lower()
     status_class = f"status-{status}" if status in ['active', 'pending', 'inactive'] else "status-pending"
     
+    card_class = "policy-card compact" if is_compact else "policy-card"
+
     st.markdown(f"""
-    <div class="policy-card">
+    <div class="{card_class}">
         <h3>{policy.get('name', 'Unnamed Policy')}</h3>
         <span class="status-badge {status_class}">{policy.get('status', 'Unknown').title()}</span>
         <p><strong>Description:</strong> {policy.get('description', 'No description available.')}</p>
@@ -417,44 +426,8 @@ def create_sidebar_navigation(pages: list, current_page: str = None) -> str:
     Returns:
         Selected page name
     """
-    # Add professional sidebar styling
-    st.sidebar.markdown("""
-    <style>
-        .nav-header {
-            padding: 1rem 0;
-            border-bottom: 1px solid var(--border-color);
-            margin-bottom: 1rem;
-        }
-        .nav-header h2 {
-            color: var(--text-primary);
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin: 0;
-        }
-    </style>
-    """, unsafe_allow_html=True)
-    
-    st.sidebar.markdown('<div class="nav-header"><h2>🧭 Navigation</h2></div>', unsafe_allow_html=True)
-    
-    # Create page options with icons
-    page_icons = {
-        "Dashboard": "📊",
-        "Policy Analysis": "📋", 
-        "Data Trends": "📈",
-        "AI Chatbot": "🤖",
-        "About": "ℹ️"
-    }
-    
-    page_options = [f"{page_icons.get(page, '📄')} {page}" for page in pages]
-    
-    selected_option = st.sidebar.selectbox(
-        "Choose a page:",
-        page_options,
-        index=pages.index(current_page) if current_page in pages else 0,
-        label_visibility="collapsed"
-    )
-    
-    # Extract the page name without icon
-    selected_page = selected_option.split(" ", 1)[1] if " " in selected_option else selected_option
-    
-    return selected_page
+    # This function is now deprecated as Streamlit handles multi-page navigation automatically.
+    # The file-based routing in the `pages/` directory is the modern approach.
+    # This function can be removed or left for reference.
+    st.sidebar.warning("Sidebar navigation is now handled automatically by Streamlit.")
+    return pages[0]

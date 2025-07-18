@@ -21,6 +21,7 @@ A comprehensive platform for analyzing technology policies and their effectivene
 1. **Clone and setup**:
 
 ```bash
+git clone https://github.com/your-username/Digital-Divide-Policy-Insights.git
 cd Digital-Divide-Policy-Insights
 ./setup.sh
 ```
@@ -60,40 +61,57 @@ cp .env.example .env
 3. **Start the Flask API**:
 
 ```bash
-cd api
-python app.py
+python api/app.py
 ```
 
 4. **Start the Streamlit frontend** (in a new terminal):
 
 ```bash
-streamlit run frontend/app.py
+streamlit run frontend/Home.py
 ```
 
 ## Project Structure
 
 ```
-├── api/                    # Flask API
-│   ├── app.py             # Main API application
-│   ├── models/            # Data models
-│   │   └── policy.py      # Policy data model
-│   ├── routes/            # API routes
-│   │   ├── policies.py    # Policy endpoints
-│   │   ├── data.py        # Data analysis endpoints
-│   │   └── chatbot.py     # Chatbot endpoints
-│   └── utils/             # Utility functions
-│       └── helpers.py     # Helper functions
-├── frontend/              # Streamlit frontend
-│   └── app.py            # Main Streamlit application
-├── data/                 # Data files and processing
-│   └── sample_data.py    # Sample policy data
-├── config/               # Configuration files
-│   └── settings.py       # Application settings
-├── .env.example          # Environment variables template
-├── requirements.txt      # Python dependencies
-├── setup.sh             # Setup script
-├── start.sh             # Startup script
-└── test_setup.py        # Setup verification script
+.
+├── .env
+├── .env.example
+├── .streamlit/
+│   └── config.toml
+├── LICENSE
+├── README.md
+├── api/
+│   ├── __init__.py
+│   ├── app.py
+│   ├── models/
+│   │   └── __init__.py
+│   ├── routes/
+│   │   ├── __init__.py
+│   │   ├── chatbot.py
+│   │   ├── data.py
+│   │   └── policies.py
+│   ├── services/
+│   │   ├── __init__.py
+│   │   └── data_service.py
+│   └── utils/
+│       ├── __init__.py
+│       └── helpers.py
+├── frontend/
+│   ├── Home.py
+│   ├── assets/
+│   │   └── icons/
+│   ├── components/
+│   │   ├── __init__.py
+│   │   └── ui_components.py
+│   ├── config.py
+│   └── pages/
+│       ├── 1_Policy_Analysis.py
+│       ├── 2_Data_Trends.py
+│       ├── 3_AI_Chatbot.py
+│       └── 4_About.py
+├── requirements.txt
+├── setup.sh
+└── start.sh
 ```
 
 ## API Endpoints

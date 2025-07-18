@@ -11,14 +11,14 @@ if ! command -v python3 &> /dev/null; then
 fi
 
 # Create virtual environment if it doesn't exist
-if [ ! -d "venv" ]; then
+if [ ! -d ".venv" ]; then
     echo "📦 Creating virtual environment..."
-    python3 -m venv venv
+    python3 -m venv .venv
 fi
 
 # Activate virtual environment
 echo "🔧 Activating virtual environment..."
-source venv/bin/activate
+source .venv/bin/activate
 
 # Upgrade pip
 echo "⬆️ Upgrading pip..."
@@ -48,7 +48,7 @@ echo ""
 echo "📋 Next steps:"
 echo "1. Edit the .env file with your configuration"
 echo "2. Start the Flask API: python api/app.py"
-echo "3. In a new terminal, start Streamlit: streamlit run frontend/app.py"
+echo "3. In a new terminal, start Streamlit: streamlit run frontend/Home.py"
 echo ""
 echo "🌐 Your application will be available at:"
 echo "   - API: http://localhost:5000"
