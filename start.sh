@@ -32,7 +32,7 @@ start_api() {
 # Function to start Streamlit frontend
 start_frontend() {
     echo "🖥️ Starting Streamlit frontend..."
-    "$PYTHON_CMD" -m streamlit run frontend/app.py --server.port 8501 --server.address 0.0.0.0 --server.headless true &
+    "$PYTHON_CMD" -m streamlit run frontend/Home.py --server.port 8501 --server.address 0.0.0.0 --server.headless true &
     FRONTEND_PID=$!
     echo "✅ Frontend started (PID: $FRONTEND_PID)"
 }
