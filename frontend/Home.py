@@ -1,9 +1,5 @@
 """
-Digital Divide Policy Insights - Main Application
-
-A Streamlit frontend for analyzing technology policies and their effectiveness 
-in bridging the digital divide. Features interactive dashboards, data visualization,
-and an AI-powered chatbot for policy inquiries.
+NetEquity: Digital Divide Policy Insights
 """
 
 import streamlit as st
@@ -18,17 +14,23 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from config import STREAMLIT_CONFIG, APP_TITLE, APP_SUBTITLE
 from components.ui_components import (
     load_custom_css, 
-    render_header, 
-    render_section_header, 
+    display_page_header,
+    display_interactive_background,
+    render_metric_card,
     render_policy_card,
-    render_info_box
+    render_info_box,
+    render_section_header
 )
 from utils.api_client import api_client
 
 
 def render_dashboard():
     """Render the main dashboard page."""
-    render_section_header("Mission Control", "An overview of digital divide policies and key performance indicators.")
+    display_page_header(
+        title="Dashboard", 
+        subtitle="A quick look at the policies and key metrics shaping digital equity.",
+        icon_name="dashboard.svg"
+    )
 
     # Fetch data from API
     policies_data = api_client.get("/api/policies/")
@@ -57,13 +59,13 @@ def _render_kpis(policies_data: dict, indicators_data: dict):
 
     kpi_cols = st.columns(4)
     with kpi_cols[0]:
-        st.metric("Total Policies", total_policies)
+        render_metric_card("Total Policies", str(total_policies))
     with kpi_cols[1]:
-        st.metric("Avg. Effectiveness", f"{avg_effectiveness:.2f}/10")
+        render_metric_card("Avg. Effectiveness", f"{avg_effectiveness:.2f}/10")
     with kpi_cols[2]:
-        st.metric("Broadband Access", f"{broadband_access:.1f}%")
+        render_metric_card("Broadband Access", f"{broadband_access:.1f}%")
     with kpi_cols[3]:
-        st.metric("Digital Literacy", f"{digital_literacy:.1f}%")
+        render_metric_card("Digital Literacy", f"{digital_literacy:.1f}%")
 
 
 def _render_dashboard_charts(policies_data: dict, indicators_data: dict):
@@ -71,21 +73,21 @@ def _render_dashboard_charts(policies_data: dict, indicators_data: dict):
     chart_cols = st.columns(2)
     
     with chart_cols[0]:
-        st.subheader("Policy Effectiveness Distribution")
+        render_section_header("Policy Effectiveness", "How do current policies score?")
         df = pd.DataFrame(policies_data.get('policies', []))
         if not df.empty:
-            fig = px.histogram(df, x="effectiveness_score", nbins=10, title="Policy Effectiveness Scores")
-            fig.update_layout(bargap=0.1)
+            fig = px.histogram(df, x="effectiveness_score", nbins=10)
+            fig.update_layout(bargap=0.1, yaxis_title="Number of Policies", xaxis_title="Effectiveness Score")
             st.plotly_chart(fig, use_container_width=True)
         else:
             st.info("No policy data to display.")
 
     with chart_cols[1]:
-        st.subheader("Key Indicators by State")
+        render_section_header("State-Level Data", "Which states are leading in digital access?")
         df_indicators = pd.DataFrame(indicators_data.get('indicators_by_state', []))
         if not df_indicators.empty:
             fig = px.bar(df_indicators.head(10), x='state', y=['broadband_access', 'digital_literacy'],
-                         title="Top 10 States by Broadband Access", barmode='group')
+                         barmode='group', labels={'value': 'Percentage', 'state': 'State', 'variable': 'Indicator'})
             st.plotly_chart(fig, use_container_width=True)
         else:
             st.info("No indicator data to display.")
@@ -93,7 +95,7 @@ def _render_dashboard_charts(policies_data: dict, indicators_data: dict):
 
 def _render_policy_spotlight(policies_data: dict):
     """Render a spotlight on a few key policies."""
-    render_section_header("Policy Spotlight", "A closer look at key policies driving change.")
+    render_section_header("Policy Spotlight", "A closer look at some key policies.")
     
     policies = policies_data.get('policies', [])
     if not policies:
@@ -116,13 +118,18 @@ def configure_app():
 
 
 def main():
-    """Main application entry point."""
-    configure_app()
+    """Main function to run the Streamlit application."""
+    st.set_page_config(**STREAMLIT_CONFIG)
+    load_custom_css()
+    display_interactive_background()
     
-    render_header(APP_TITLE, APP_SUBTITLE)
-    
-    # The dashboard is now the home page
     render_dashboard()
+
+    render_info_box(
+        "About This Platform",
+        "This dashboard helps you explore policies related to the digital divide. "
+        "It uses a mix of real and sample data to show what's possible."
+    )
 
 
 if __name__ == "__main__":

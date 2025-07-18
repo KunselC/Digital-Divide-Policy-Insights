@@ -11,7 +11,7 @@ load_dotenv()
 API_BASE_URL = os.getenv('API_BASE_URL', 'http://localhost:5001')
 
 # App Configuration
-APP_TITLE = "Digital Divide Policy Insights"
+APP_TITLE = "NetEquity"
 APP_ICON = None # This is no longer used for the main icon
 APP_SUBTITLE = "Analyzing Technology Policies and Their Effectiveness in Bridging the Digital Divide"
 
@@ -29,7 +29,6 @@ PAGES = [
     "Dashboard",
     "Policy Analysis", 
     "Data Trends",
-    "AI Chatbot",
     "About"
 ]
 
@@ -44,11 +43,3 @@ STREAMLIT_CONFIG = {
         'About': None
     }
 }
-
-# Quick questions for chatbot
-CHATBOT_SUGGESTIONS = [
-    "What is the Digital Equity Act?",
-    "How effective are the policies?",
-    "Compare all policies",
-    "Show policy statistics"
-]
