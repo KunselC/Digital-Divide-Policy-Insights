@@ -30,8 +30,14 @@ class DigitalDividePredictor:
                         'EduIndex', 'CSGraduatesPerCapita']
         self.target = 'WebPagesPerMillion'
         
-    def load_data(self, data_path="data/country_digital_features.csv"):
+    def load_data(self, data_path=None):
         """Load and return the dataset."""
+        if data_path is None:
+            # Get the absolute path to the data file
+            current_dir = os.path.dirname(os.path.abspath(__file__))
+            project_root = os.path.dirname(os.path.dirname(current_dir))
+            data_path = os.path.join(project_root, "data", "country_digital_features.csv")
+        
         if os.path.exists(data_path):
             df = pd.read_csv(data_path)
             return df

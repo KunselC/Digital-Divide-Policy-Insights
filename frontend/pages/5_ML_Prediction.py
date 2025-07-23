@@ -49,11 +49,24 @@ def render_ml_page():
     )
     
     # Initialize predictor
-    predictor = DigitalDividePredictor()
-    
-    # Create tabs for different sections
-    # Only show ML Dataset Overview tab
-    render_dataset_overview(predictor)
+    try:
+        predictor = DigitalDividePredictor()
+        
+        # Create tabs for different sections
+        tab1, tab2, tab3 = st.tabs(["Dataset Overview", "Model Training", "Make Predictions"])
+        
+        with tab1:
+            render_dataset_overview(predictor)
+        
+        with tab2:
+            render_model_training(predictor)
+            
+        with tab3:
+            render_predictions_interface(predictor)
+            
+    except Exception as e:
+        st.error(f"Error initializing ML module: {str(e)}")
+        st.info("Please check that all required dependencies are installed and data files are available.")
 def render_notebook_prediction_gui():
     """GUI for notebook-style prediction function."""
     st.subheader("Notebook-Style ML Prediction")
@@ -82,11 +95,13 @@ def render_notebook_prediction_gui():
         from sklearn.pipeline import Pipeline
 
         # Load data (use local CSV for consistency)
-        data_path = "data/country_digital_features.csv"
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        project_root = os.path.dirname(os.path.dirname(current_dir))
+        data_path = os.path.join(project_root, "data", "country_digital_features.csv")
         if os.path.exists(data_path):
             df = pd.read_csv(data_path)
         else:
-            st.error("Dataset not found.")
+            st.error(f"Dataset not found at {data_path}")
             return
 
         features = [
@@ -160,7 +175,7 @@ def render_notebook_export(predictor):
         "cell_type": "code",
         "metadata": {"language": "python"},
         "source": [
-            "df = pd.read_csv('data/country_digital_features.csv')",
+            "df = pd.read_csv('../data/country_digital_features.csv')",
             "df.head()"
         ]
     })
@@ -290,70 +305,258 @@ def render_notebook_export(predictor):
 
 def render_dataset_overview(predictor):
     """Render the dataset overview section."""
+    st.markdown("### Dataset Overview")
+    
+    try:
+        # Load data
+        df = predictor.load_data()
+        
+        if df is not None and not df.empty:
+            st.success(f"Dataset loaded successfully with {len(df)} countries")
+            
+            # Display basic statistics
+            col1, col2, col3 = st.columns(3)
+            
+            with col1:
+                render_metric_card(
+                    "Countries", 
+                    str(len(df)), 
+                    "Total countries in dataset"
+                )
+            
+            with col2:
+                render_metric_card(
+                    "Features", 
+                    str(len(predictor.features)), 
+                    "Input features for prediction"
+                )
+            
+            with col3:
+                render_metric_card(
+                    "Target Variable", 
+                    "Web Pages/Million", 
+                    "What we're predicting"
+                )
+            
+            # Show data preview
+            st.markdown("#### Data Preview")
+            st.dataframe(df.head(10), use_container_width=True)
+            
+            # Show feature statistics
+            st.markdown("#### Feature Statistics")
+            feature_stats = df[predictor.features].describe()
+            st.dataframe(feature_stats, use_container_width=True)
+            
+        else:
+            st.error("Failed to load dataset")
+            
+    except Exception as e:
+        st.error(f"Error loading dataset: {str(e)}")
 
+def render_model_training(predictor):
+    """Render the model training section."""
+    st.markdown("### Model Training & Evaluation")
+    
+    try:
+        # Load and train model
+        df = predictor.load_data()
+        
+        if df is not None and not df.empty:
+            if st.button("Train Model", type="primary"):
+                with st.spinner("Training machine learning model..."):
+                    results = predictor.train_model(df)
+                
+                if results:
+                    col1, col2 = st.columns(2)
+                    
+                    with col1:
+                        render_metric_card(
+                            "R² Score", 
+                            f"{results['r2_score']:.3f}", 
+                            "Model accuracy (higher is better)"
+                        )
+                    
+                    with col2:
+                        render_metric_card(
+                            "MSE", 
+                            f"{results['mse']:,.0f}", 
+                            "Mean Squared Error (lower is better)"
+                        )
+                    
+                    # Show feature importance if available
+                    try:
+                        importance = predictor.get_feature_importance()
+                        if importance is not None:
+                            st.markdown("#### Feature Importance")
+                            importance_df = pd.DataFrame({
+                                'Feature': predictor.features,
+                                'Importance': importance
+                            }).sort_values('Importance', ascending=False)
+                            
+                            st.bar_chart(importance_df.set_index('Feature'))
+                    except:
+                        pass
+                        
+        else:
+            st.error("Cannot train model: Dataset not available")
+            
+    except Exception as e:
+        st.error(f"Error training model: {str(e)}")
 
-    # --- Feature Selection and Percentage Input UI ---
-    st.markdown("### Simulate Feature Change Prediction")
-    st.caption("Select a feature and input a percentage change to simulate its impact on digital divide and internet access.")
+def render_predictions_interface(predictor):
+    """Render the predictions interface."""
+    st.markdown("### Make Predictions")
+    
+    # Load and train model first
+    try:
+        df = predictor.load_data()
+        if df is not None and not df.empty:
+            # Train the model
+            results = predictor.train_model(df)
+            
+            st.markdown("#### Input Feature Values")
+            st.caption("Adjust the values below to see how they affect digital divide predictions")
+            
+            # Create input fields for each feature
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                internet_pen = st.slider("Internet Penetration (%)", 0.0, 100.0, 75.0)
+                broadband_speed = st.slider("Broadband Speed (Mbps)", 0.0, 100.0, 40.0)
+                gdp_per_capita = st.slider("GDP per Capita ($)", 0, 100000, 35000)
+                electricity_access = st.slider("Electricity Access (%)", 0.0, 100.0, 95.0)
+            
+            with col2:
+                urban_pop = st.slider("Urban Population (%)", 0.0, 100.0, 70.0)
+                mobile_subs = st.slider("Mobile Subscriptions (per 100)", 0.0, 200.0, 120.0)
+                edu_index = st.slider("Education Index", 0.0, 1.0, 0.85)
+                cs_graduates = st.slider("CS Graduates per Capita", 0.0, 50.0, 15.0)
+            
+            # Make prediction
+            if st.button("Make Prediction", type="primary"):
+                try:
+                    input_data = np.array([[
+                        internet_pen, broadband_speed, gdp_per_capita, electricity_access,
+                        urban_pop, mobile_subs, edu_index, cs_graduates
+                    ]])
+                    
+                    prediction = predictor.predict(input_data)
+                    
+                    if prediction is not None:
+                        st.success("Prediction completed successfully!")
+                        
+                        # Display prediction
+                        col1, col2, col3 = st.columns(3)
+                        
+                        with col2:  # Center the result
+                            render_metric_card(
+                                "Predicted Web Pages per Million", 
+                                f"{prediction[0]:,.0f}", 
+                                "Expected digital content creation"
+                            )
+                        
+                        # Show prediction context
+                        st.markdown("#### Prediction Context")
+                        avg_target = df[predictor.target].mean()
+                        
+                        if prediction[0] > avg_target:
+                            st.success(f"This prediction ({prediction[0]:,.0f}) is above the global average ({avg_target:,.0f}), indicating strong digital presence.")
+                        else:
+                            st.warning(f"This prediction ({prediction[0]:,.0f}) is below the global average ({avg_target:,.0f}), suggesting potential for digital growth.")
+                            
+                    else:
+                        st.error("Failed to make prediction")
+                        
+                except Exception as e:
+                    st.error(f"Error making prediction: {str(e)}")
+            
+            # Preset scenarios
+            st.markdown("#### Quick Scenarios")
+            st.caption("Try these preset scenarios to see different prediction outcomes")
+            
+            col1, col2, col3 = st.columns(3)
+            
+            scenarios = {
+                "Developed Country": {
+                    "internet": 90.0, "broadband": 80.0, "gdp": 50000, "electricity": 100.0,
+                    "urban": 85.0, "mobile": 150.0, "education": 0.95, "cs_grads": 25.0
+                },
+                "Developing Country": {
+                    "internet": 45.0, "broadband": 15.0, "gdp": 8000, "electricity": 75.0,
+                    "urban": 55.0, "mobile": 80.0, "education": 0.65, "cs_grads": 5.0
+                },
+                "Emerging Economy": {
+                    "internet": 70.0, "broadband": 35.0, "gdp": 25000, "electricity": 90.0,
+                    "urban": 70.0, "mobile": 110.0, "education": 0.80, "cs_grads": 12.0
+                }
+            }
+            
+            for i, (scenario_name, values) in enumerate(scenarios.items()):
+                col = [col1, col2, col3][i]
+                
+                with col:
+                    if st.button(scenario_name, use_container_width=True):
+                        input_data = np.array([[
+                            values["internet"], values["broadband"], values["gdp"], values["electricity"],
+                            values["urban"], values["mobile"], values["education"], values["cs_grads"]
+                        ]])
+                        
+                        prediction = predictor.predict(input_data)
+                        if prediction is not None:
+                            st.metric(
+                                "Predicted Web Pages",
+                                f"{prediction[0]:,.0f}",
+                                help="Web pages per million population"
+                            )
+        
+            # Add feature simulation section
+            st.markdown("---")
+            render_feature_simulation()
+            
+        else:
+            st.error("Cannot make predictions: Dataset not available")
+            
+    except Exception as e:
+        st.error(f"Error in predictions interface: {str(e)}")
 
-    feature_options = [
-        'Food production index (2004-2006=100)',
-        'Surface area (km2)',
-        'Population in thousands (2017)',
-        'Population density (per km2, 2017)',
-        'Sex ratio (m per 100 f, 2017)',
-        'GDP: Gross domestic product (million current US$)',
-        'GDP growth rate (annual %, const. 2005 prices)',
+def render_feature_simulation():
+    """Render feature simulation section."""
+    st.subheader("Feature Impact Simulation")
+    st.caption("Simulate the effect of changing a feature on digital divide predictions")
+    
+    # Feature selection - using actual feature names from the ML data
+    available_features = [
         'GDP per capita (current US$)',
-        'Economy: Agriculture (% of GVA)',
-        'Economy: Industry (% of GVA)',
-        'Economy: Services and other activity (% of GVA)',
-        'Employment: Agriculture (% of employed)',
-        'Employment: Industry (% of employed)',
-        'Employment: Services (% of employed)',
-        'Unemployment (% of labour force)',
-        'Labour force participation (female/male pop. %)',
-        'Agricultural production index (2004-2006=100)',
-        'International trade: Exports (million US$)',
-        'International trade: Imports (million US$)',
-        'International trade: Balance (million US$)',
-        'Balance of payments, current account (million US$)',
-        'Population growth rate (average annual %)',
         'Urban population (% of total population)',
-        'Urban population growth rate (average annual %)',
-        'Fertility rate, total (live births per woman)',
-        'Life expectancy at birth (females/males, years)',
-        'Population age distribution (0-14 / 60+ years, %)',
-        'International migrant stock (000/% of total pop.)',
-        'Refugees and others of concern to UNHCR (in thousands)',
-        'Infant mortality rate (per 1000 live births',
-        'Health: Total expenditure (% of GDP)',
-        'Health: Physicians (per 1000 pop.)',
-        'Education: Government expenditure (% of GDP)',
-        'Education: Primary gross enrol. ratio (f/m per 100 pop.)',
-        'Education: Secondary gross enrol. ratio (f/m per 100 pop.)',
-        'Education: Tertiary gross enrol. ratio (f/m per 100 pop.)',
-        'Seats held by women in national parliaments %',
         'Mobile-cellular subscriptions (per 100 inhabitants)',
-        'Mobile-cellular subscriptions (per 100 inhabitants).1',
         'Individuals using the Internet (per 100 inhabitants)',
-        'Threatened species (number)',
-        'Forested area (% of land area)',
-        'CO2 emission estimates (million tons/tons per capita)',
-        'Energy production, primary (Petajoules)',
-        'Energy supply per capita (Gigajoules)',
-        'Pop. using improved drinking water (urban/rural, %)',
-        'Pop. using improved sanitation facilities (urban/rural, %)',
-        'Net Official Development Assist. received (% of GNI)'
+        'Education: Government expenditure (% of GDP)',
+        'Education: Tertiary gross enrol. ratio (f/m per 100 pop.)',
+        'Health: Total expenditure (% of GDP)',
+        'Employment: Services (% of employed)',
+        'Economy: Services and other activity (% of GVA)',
+        'Population density (per km2, 2017)',
+        'Life expectancy at birth (females/males, years)',
+        'Seats held by women in national parliaments %'
     ]
-
-    selected_feature = st.selectbox("Select Feature to Simulate", feature_options)
+    
+    selected_feature = st.selectbox(
+        "Select Feature to Modify", 
+        available_features,
+        help="Choose which feature to simulate changes for"
+    )
+    
     pct_increase = st.number_input("Percentage Change (+/-)", min_value=-100.0, max_value=100.0, value=10.0, step=1.0)
     top_n = st.number_input("Show Top N Countries", min_value=1, max_value=20, value=10, step=1)
 
     # --- Prediction Trigger ---
     if st.button("Run Simulation"):
         try:
+            # Add the project root to sys.path to import ml_data module
+            current_dir = os.path.dirname(os.path.abspath(__file__))
+            project_root = os.path.dirname(os.path.dirname(current_dir))
+            sys.path.append(project_root)
+            
             from ml_data.ml_predict import simulate_feature_change, stacking_pipeline, df
             results_df = simulate_feature_change(
                 stacking_pipeline,
