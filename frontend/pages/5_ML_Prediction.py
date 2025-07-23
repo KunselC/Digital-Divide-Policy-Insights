@@ -557,6 +557,10 @@ def render_feature_simulation():
             project_root = os.path.dirname(os.path.dirname(current_dir))
             sys.path.append(project_root)
             
+            # Change working directory to project root temporarily
+            original_cwd = os.getcwd()
+            os.chdir(project_root)
+            
             from ml_data.ml_predict import simulate_feature_change, stacking_pipeline, df
             results_df = simulate_feature_change(
                 stacking_pipeline,
@@ -565,10 +569,21 @@ def render_feature_simulation():
                 pct_increase,
                 top_n=top_n
             )
+            
+            # Restore original working directory
+            os.chdir(original_cwd)
+            
             st.success(f"Simulation complete for {selected_feature} +{pct_increase}%")
             st.dataframe(results_df)
         except Exception as e:
+            # Restore original working directory in case of error
+            try:
+                os.chdir(original_cwd)
+            except:
+                pass
             st.error(f"Error running simulation: {e}")
+            import traceback
+            st.error(traceback.format_exc())
 
     # --- Existing Dataset Preview ---
     st.subheader("Dataset Overview")
