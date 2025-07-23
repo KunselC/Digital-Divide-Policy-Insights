@@ -60,11 +60,8 @@ def render_data_trends_page():
         )
         st.plotly_chart(fig, use_container_width=True)
     
-<<<<<<< HEAD
-=======
     st.markdown('<div class="content-box">', unsafe_allow_html=True)
     
->>>>>>> origin/main
     # --- Custom Internet Access Trend Plot ---
     col_header1, col_header2 = st.columns(2)
     with col_header1:
@@ -162,10 +159,8 @@ def render_data_trends_page():
         # ...removed duplicate continent plot and selectbox...
     else:
         st.error("internet_usage.csv or country_profile_variables.csv not found in ml_data folder.")
-<<<<<<< HEAD
 
     # --- Existing API-based sections removed as requested ---
-
 
 def _render_trend_analysis(trends_data: dict):
     """Render trend analysis metrics."""
@@ -346,13 +341,6 @@ def main():
     """Main function to set up and render the page."""
     from components.ui_components import load_custom_css, display_interactive_background
     
-=======
-    
-    st.markdown('</div>', unsafe_allow_html=True)
-
-def main():
-    """Main function to set up and render the page."""
->>>>>>> origin/main
     st.set_page_config(
         page_title="Data Trends - NetEquity",
         layout="wide"
