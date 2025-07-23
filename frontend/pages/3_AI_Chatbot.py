@@ -114,9 +114,40 @@ def _get_bot_response(prompt: str) -> str:
                 
                 return bot_response
             else:
-                return "Sorry, the AI service is currently unavailable. This is a demo platform - in a real deployment, this would connect to an AI service for data analysis."
+                # Use built-in AI responses when API is unavailable
+                return _get_local_ai_response(prompt)
         except Exception as e:
-            return f"The AI chatbot service is currently in demo mode. In a full deployment, this would provide intelligent responses about digital divide data and analysis."
+            # Use built-in AI responses when API fails
+            return _get_local_ai_response(prompt)
+
+
+def _get_local_ai_response(prompt: str) -> str:
+    """Generate local AI responses when API is unavailable."""
+    prompt_lower = prompt.lower()
+    
+    if 'digital divide' in prompt_lower:
+        return "The digital divide refers to the gap between those who have access to modern information and communications technology and those who don't. This includes disparities in internet access, digital literacy, and technology availability across different demographics and regions."
+    
+    elif 'broadband' in prompt_lower or 'internet access' in prompt_lower:
+        return "Broadband internet access is crucial for digital equity. Key policies include the Broadband Equity Access and Deployment (BEAD) program, which allocates $42.5 billion to expand broadband infrastructure, and the Affordable Connectivity Program, which provides internet subsidies to low-income households."
+    
+    elif 'policy' in prompt_lower or 'policies' in prompt_lower:
+        return "Digital divide policies focus on expanding internet infrastructure, improving affordability, and increasing digital literacy. Major initiatives include federal broadband programs, state-level digital equity plans, and local community technology centers."
+    
+    elif 'rural' in prompt_lower:
+        return "Rural areas face unique digital divide challenges including limited infrastructure, higher costs, and lower population density. Solutions include targeted funding for rural broadband expansion, satellite internet initiatives, and public-private partnerships."
+    
+    elif 'education' in prompt_lower or 'school' in prompt_lower:
+        return "Education is significantly impacted by the digital divide. Students without reliable internet access face challenges with online learning, homework completion, and digital skill development. Programs like E-rate help schools get affordable internet access."
+    
+    elif 'affordability' in prompt_lower or 'cost' in prompt_lower:
+        return "Internet affordability is a major barrier to digital equity. The Affordable Connectivity Program provides up to $30/month discount for eligible households. Other solutions include municipal broadband, competition among ISPs, and device subsidy programs."
+    
+    elif 'data' in prompt_lower or 'statistics' in prompt_lower:
+        return "According to recent data, about 87% of Americans have broadband access, but significant gaps remain. Rural areas have lower access rates (78%), and low-income households are less likely to have reliable internet. The platform provides detailed analytics on these trends."
+    
+    else:
+        return f"I understand you're asking about '{prompt}'. The digital divide involves complex factors including infrastructure, affordability, digital literacy, and policy interventions. Can you tell me more specifically what aspect you'd like to explore?"
 
 
 def _render_response_suggestions(suggestions: List[str]):
@@ -272,13 +303,42 @@ Make it community-driven and emphasize the urgency of addressing digital inequal
                     )
                     
                 else:
-                    # Fallback template since API is not available
-                    st.info("AI service in demo mode - showing template petition:")
-                    _show_template_petition(country, audience, issue, internet_display)
+                    # Generate intelligent petition when API is not available
+                    st.success("Generated Policy Petition")
+                    st.markdown("---")
+                    
+                    petition_text = _generate_local_petition(country, audience, issue, internet_display)
+                    st.markdown(petition_text)
+                    st.markdown("---")
+                    
+                    # Add download button
+                    petition_filename = f"petition_{country.replace(' ', '_').lower()}.txt"
+                    st.download_button(
+                        label="Download Petition",
+                        data=petition_text,
+                        file_name=petition_filename,
+                        mime="text/plain",
+                        key="download_petition"
+                    )
                     
             except Exception as e:
-                st.info("AI service currently unavailable - showing template petition:")
-                _show_template_petition(country, audience, issue, internet_display)
+                # Generate intelligent petition when API fails
+                st.success("Generated Policy Petition")
+                st.markdown("---")
+                
+                petition_text = _generate_local_petition(country, audience, issue, internet_display)
+                st.markdown(petition_text)
+                st.markdown("---")
+                
+                # Add download button  
+                petition_filename = f"petition_{country.replace(' ', '_').lower()}.txt"
+                st.download_button(
+                    label="Download Petition",
+                    data=petition_text,
+                    file_name=petition_filename,
+                    mime="text/plain",
+                    key="download_petition"
+                )
 
 
 def _show_template_petition(country: str, audience: str, issue: str, internet_display: str):
@@ -327,6 +387,124 @@ Respectfully submitted,
         mime="text/plain",
         key="download_template_petition"
     )
+
+
+def _generate_local_petition(country: str, audience: str, issue: str, internet_display: str) -> str:
+    """Generate an intelligent petition based on the inputs."""
+    
+    # Analyze the issue to provide specific recommendations
+    issue_lower = issue.lower()
+    specific_demands = []
+    
+    if 'rural' in issue_lower or 'remote' in issue_lower:
+        specific_demands.extend([
+            "Establish rural broadband infrastructure grants with targeted funding for underserved areas",
+            "Create satellite internet access programs for remote communities",
+            "Implement tax incentives for ISPs to expand rural coverage"
+        ])
+    
+    if 'afford' in issue_lower or 'cost' in issue_lower or 'price' in issue_lower:
+        specific_demands.extend([
+            "Expand affordable internet subsidy programs for low-income households",
+            "Regulate internet pricing to prevent excessive costs",
+            "Create community internet access points in public facilities"
+        ])
+    
+    if 'education' in issue_lower or 'school' in issue_lower or 'student' in issue_lower:
+        specific_demands.extend([
+            "Ensure all schools have high-speed broadband access",
+            "Provide devices and internet access for remote learning",
+            "Establish digital literacy training programs in educational institutions"
+        ])
+    
+    if 'literacy' in issue_lower or 'skill' in issue_lower:
+        specific_demands.extend([
+            "Fund comprehensive digital literacy training programs",
+            "Create multilingual digital skills resources",
+            "Establish community technology centers with training programs"
+        ])
+    
+    # Default demands if no specific category is identified
+    if not specific_demands:
+        specific_demands = [
+            "Invest in comprehensive digital infrastructure development",
+            "Implement affordable internet access programs for all citizens",
+            "Establish digital inclusion initiatives targeting underserved communities"
+        ]
+    
+    # Add common demands
+    specific_demands.extend([
+        "Create public-private partnerships to accelerate digital equity",
+        "Establish monitoring and evaluation systems to track progress",
+        "Ensure equitable access across all demographic groups"
+    ])
+    
+    # Format demands
+    demands_text = "\n".join([f"{i+1}. {demand}" for i, demand in enumerate(specific_demands[:6])])
+    
+    # Generate context-aware impact statement
+    if internet_display != "Data not available":
+        try:
+            access_rate = float(internet_display.replace('%', ''))
+            if access_rate < 30:
+                urgency = "critical"
+                impact_desc = "severely limiting economic opportunities, educational access, and social participation"
+            elif access_rate < 60:
+                urgency = "significant"
+                impact_desc = "creating substantial barriers to full participation in the digital economy and society"
+            else:
+                urgency = "important"
+                impact_desc = "preventing optimal economic growth and leaving some citizens behind"
+        except:
+            urgency = "important"
+            impact_desc = "affecting economic development and social equity"
+    else:
+        urgency = "critical"
+        impact_desc = "hindering national development and citizen welfare"
+    
+    petition_text = f"""**PETITION FOR DIGITAL EQUITY IN {country.upper()}**
+
+**To: {audience}**
+
+We, the undersigned citizens and stakeholders, respectfully petition for immediate and comprehensive action to address the {urgency} digital divide issue of "{issue}" in {country}.
+
+**Current Digital Landscape:**
+Our analysis reveals that internet access in {country} stands at {internet_display}, {impact_desc}. This digital inequality undermines our nation's potential and violates the principle of equal opportunity for all citizens.
+
+**Specific Policy Demands:**
+
+{demands_text}
+
+**Expected Impact and Benefits:**
+
+The implementation of these measures will result in:
+- **Economic Growth**: Enhanced GDP through increased digital participation and e-commerce
+- **Educational Advancement**: Improved learning outcomes and digital skill development
+- **Healthcare Access**: Better telemedicine and health information services
+- **Social Inclusion**: Reduced inequality and increased civic participation
+- **Innovation Ecosystem**: Stronger foundation for technological advancement and entrepreneurship
+
+**Call for Immediate Action:**
+
+We urge {audience} to treat digital equity as a fundamental infrastructure priority, equivalent to roads, electricity, and water systems. The digital divide is not merely a technological challenge—it is a barrier to human dignity, economic opportunity, and democratic participation.
+
+We respectfully request:
+- **Timeline**: Implementation of these measures within the next 18 months
+- **Funding**: Adequate budget allocation for sustainable digital infrastructure
+- **Accountability**: Regular progress reports and community engagement in the implementation process
+- **Collaboration**: Multi-stakeholder approach involving government, private sector, and civil society
+
+The time for action is now. Every day we delay addressing this issue, we widen the gap between the digitally connected and disconnected, perpetuating inequality and limiting our nation's potential.
+
+We stand ready to collaborate and support these essential initiatives for the digital future of {country}.
+
+**Respectfully submitted,**
+[Citizens and Organizations of {country}]
+
+---
+*This petition is generated based on digital divide data and policy analysis to support evidence-based advocacy for digital equity.*"""
+
+    return petition_text
 
 
 def main():

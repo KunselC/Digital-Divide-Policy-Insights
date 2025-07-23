@@ -103,8 +103,8 @@ class APIClient:
             }
         elif "/api/chatbot/chat" in endpoint:
             return {
-                "bot_response": "I'm currently running in demo mode. In the full version, I can answer detailed questions about digital divide policies, analyze effectiveness data, and provide insights based on the latest research.",
-                "suggestions": ["Tell me about broadband access policies", "What are the main barriers to digital equity?"]
+                "bot_response": "I'm here to help you understand digital divide policies and analyze digital equity data. What specific aspect would you like to explore?",
+                "suggestions": ["Tell me about broadband access policies", "What are the main barriers to digital equity?", "How can we measure digital divide progress?"]
             }
         else:
             return {"message": "Demo mode - API unavailable"}

@@ -241,52 +241,18 @@ def render_section_header(title: str, description: str = None):
     """, unsafe_allow_html=True)
 
 def display_3d_globe_component():
-    """Display the 3D globe component."""
-    st.info("Loading 3D model... This may take a moment due to the file size.")
+    """Display the 3D globe component using the submarine cable GLB model."""
+    st.info("🌍 Loading interactive 3D globe... This may take a moment due to the detailed model.")
     
+    # Load the 3D model as base64
     model_uri = get_model_as_base64("submarine_fiber_optic_cable_network.glb")
     
     if not model_uri:
-        st.error("Failed to generate model URI - 3D model file not found")
-        return
-    
-    # Load the HTML template
-    try:
-        template_path = ASSETS_PATH / "modern_3d.html"
-        with open(template_path, 'r', encoding='utf-8') as f:
-            html_template = f.read()
-        
-        # Replace the model URI placeholder
-        html_content = html_template.replace("{{MODEL_URI}}", model_uri)
-        
-        # Display in Streamlit
-        st.components.v1.html(html_content, height=600, scrolling=False)
-        
-        # Show debug info below
-        with st.expander("Debug Info"):
-            st.write(f"Model URI length: {len(model_uri):,} characters")
-            if len(model_uri) > 10000000:  # 10MB
-                st.warning("Large model file detected!")
-                st.markdown("""
-                The 3D model is quite large (9.7MB → 13.6MB base64 encoded). 
-                If the model doesn't load properly, this is likely due to browser memory limitations.
-                
-                **Potential solutions:**
-                - Use a smaller, optimized 3D model file
-                - Load the model from a URL instead of embedding it
-                - Implement progressive loading
-                """)
-            else:
-                st.success("Model size is within reasonable limits")
-                
-    except FileNotFoundError:
-        st.error("HTML template not found - cannot display 3D model")
-    except Exception as e:
-        st.error(f"Error loading 3D model: {str(e)}")
-        # Show fallback
+        st.error("Failed to load 3D model - file not found or too large")
+        # Show fallback visualization
         st.markdown("""
         <div style="
-            height: 600px; 
+            height: 400px; 
             background: linear-gradient(135deg, #1e3c72, #2a5298);
             border-radius: 12px;
             display: flex;
@@ -297,12 +263,88 @@ def display_3d_globe_component():
             font-family: 'Inter', sans-serif;
         ">
             <div>
-                <h3 style="margin: 0 0 1rem 0;">Global Submarine Cable Network</h3>
-                <p style="margin: 0;">3D Model temporarily unavailable</p>
-                <p style="margin: 0.5rem 0 0 0; opacity: 0.8;">Please try refreshing the page</p>
+                <h3 style="margin: 0 0 1rem 0;">3D Globe Temporarily Unavailable</h3>
+                <p style="margin: 0;">The 3D model file could not be loaded</p>
+                <p style="margin: 0.5rem 0 0 0; opacity: 0.8;">Please check the model file and try again</p>
             </div>
         </div>
         """, unsafe_allow_html=True)
+        return
+    
+    # Load the HTML template and display the 3D model
+    try:
+        template_path = ASSETS_PATH / "modern_3d.html"
+        
+        if not template_path.exists():
+            st.error(f"3D template not found: {template_path}")
+            return
+            
+        with open(template_path, 'r', encoding='utf-8') as f:
+            html_template = f.read()
+        
+        # Replace the model URI placeholder
+        html_content = html_template.replace("{{MODEL_URI}}", model_uri)
+        
+        # Display in Streamlit using components
+        st.components.v1.html(html_content, height=600, scrolling=False)
+        
+        # Show model information
+        with st.expander("3D Model Information", expanded=False):
+            st.info("**Submarine Fiber Optic Cable Network**")
+            st.write("This 3D model shows the global network of underwater fiber optic cables that carry internet traffic between continents.")
+            
+            col1, col2 = st.columns(2)
+            with col1:
+                st.metric("Model File Size", "9.7 MB", "High detail")
+            with col2:
+                st.metric("Data Coverage", "Global", "99% of international traffic")
+            
+            # Check if model is large and show performance note
+            if len(model_uri) > 10_000_000:  # 10MB in base64
+                st.warning("""
+                **Performance Note:** This is a detailed 3D model. If you experience slow loading:
+                - The model may take 10-30 seconds to fully load
+                - Use mouse to rotate and explore once loaded
+                - Refresh the page if the model doesn't appear
+                """)
+            else:
+                st.success("Model size is optimized for web viewing")
+                
+    except Exception as e:
+        st.error(f"Error loading 3D model: {str(e)}")
+        st.info("If you continue to see this error, the model file may be corrupted or too large for your browser.")
+
+def display_simple_3d_globe():
+    """Display a lightweight 3D globe using Three.js without the heavy model file."""
+    st.info("🌍 Interactive 3D Globe - Lightweight Version")
+    
+    try:
+        # Load the simple globe HTML template
+        simple_globe_path = ASSETS_PATH / "simple_globe.html"
+        
+        if simple_globe_path.exists():
+            with open(simple_globe_path, 'r', encoding='utf-8') as f:
+                html_content = f.read()
+            
+            # Display the lightweight 3D globe
+            st.components.v1.html(html_content, height=500, scrolling=False)
+            
+            # Add information about the lightweight version
+            st.success("✨ **Lightweight 3D Globe** - Fast loading with interactive features")
+            
+            col1, col2, col3 = st.columns(3)
+            with col1:
+                st.metric("Global Internet Users", "5.16B", "4.8%")
+            with col2:
+                st.metric("Submarine Cables", "450+", "Active worldwide")  
+            with col3:
+                st.metric("Data Capacity", "15+ Tbps", "Total global capacity")
+                
+        else:
+            st.error(f"Simple globe template not found: {simple_globe_path}")
+            
+    except Exception as e:
+        st.error(f"Error loading simple 3D globe: {str(e)}")
 
 def format_metric_value(value, format_type: str = "auto") -> str:
     """Format metric values for display."""

@@ -16,7 +16,8 @@ from components.ui_components import (
     display_page_header,
     load_custom_css,
     display_interactive_background,
-    display_3d_globe_component
+    display_3d_globe_component,
+    display_simple_3d_globe
 )
 
 def render_dashboard_tab():
@@ -94,12 +95,35 @@ def render_globe_tab():
     
     st.markdown("""
     <div class="content-box">
-        <p>This interactive 3D model visualizes the global network of submarine fiber optic cables 
-        that form the backbone of the internet. Rotate and explore the intricate web that connects our world.</p>
+        <p>This interactive 3D visualization shows the global network of submarine fiber optic cables 
+        that form the backbone of the internet. Choose between the detailed cable model or a lightweight globe view.</p>
     </div>
     """, unsafe_allow_html=True)
     
-    display_3d_globe_component()
+    # Create sub-tabs for different 3D views
+    detailed_tab, simple_tab = st.tabs(["🌊 Submarine Cables (Detailed)", "🌍 Globe (Lightweight)"])
+    
+    with detailed_tab:
+        st.markdown("""
+        <div class="content-box">
+            <h4>Detailed Submarine Cable Network</h4>
+            <p>This high-detail 3D model shows the actual underwater fiber optic cables. 
+            <strong>Note:</strong> This model is 9.7MB and may take 10-30 seconds to load.</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        display_3d_globe_component()
+    
+    with simple_tab:
+        st.markdown("""
+        <div class="content-box">
+            <h4>Interactive Globe View</h4>
+            <p>A lightweight 3D globe that loads instantly with smooth mouse interaction. 
+            Perfect for users who want quick visualization without waiting for large model files.</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        display_simple_3d_globe()
 
 def main():
     """Main function to set up and render the application."""
