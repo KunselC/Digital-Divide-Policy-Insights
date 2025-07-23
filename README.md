@@ -50,7 +50,6 @@ Your app will be live at: `https://netequity.streamlit.app` (or your chosen URL)
 
 - **Interactive Dashboard**: Policy effectiveness scores and key metrics
 - **Data Trends**: Visualize digital divide indicators over time
-- **Policy Analysis**: Deep dive into individual policy details
 - **AI Chatbot**: Ask questions about policies in plain English
 - **ML Prediction**: Advanced machine learning models for digital divide prediction
   - Random Forest regression for web presence prediction

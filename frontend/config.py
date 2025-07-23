@@ -27,7 +27,6 @@ THEME_CONFIG = {
 # Page Configuration
 PAGES = [
     "Dashboard",
-    "Policy Analysis", 
     "Data Trends",
     "AI Chatbot",
     "ML Prediction",

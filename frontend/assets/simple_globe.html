@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>3D Globe</title>
+    <style>
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #1e3c72, #2a5298);
+      }
+      #globe-canvas {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="globe-canvas"></canvas>
+
+    <!-- Three.js -->
+    <script src="https://unpkg.com/three@0.132.2/build/three.min.js"></script>
+
+    <script>
+      (function () {
+        const scene = new THREE.Scene();
+        const canvas = document.getElementById("globe-canvas");
+        if (!canvas) return;
+
+        const renderer = new THREE.WebGLRenderer({
+          canvas,
+          alpha: true,
+          antialias: true,
+        });
+        renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+        renderer.setClearColor(0x000000, 0);
+
+        const camera = new THREE.PerspectiveCamera(
+          75,
+          canvas.clientWidth / canvas.clientHeight,
+          0.1,
+          1000
+        );
+        camera.position.z = 3;
+
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0x404040, 0.4);
+        scene.add(ambientLight);
+
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+        directionalLight.position.set(5, 3, 5);
+        scene.add(directionalLight);
+
+        // Create Earth-like sphere
+        const geometry = new THREE.SphereGeometry(1, 32, 32);
+
+        // Create a simple Earth-like material
+        const material = new THREE.MeshPhongMaterial({
+          color: 0x2194ce,
+          transparent: true,
+          opacity: 0.8,
+        });
+
+        const globe = new THREE.Mesh(geometry, material);
+        scene.add(globe);
+
+        // Create points to represent network connections
+        const pointsGeometry = new THREE.BufferGeometry();
+        const pointsCount = 100;
+        const positions = new Float32Array(pointsCount * 3);
+
+        for (let i = 0; i < pointsCount; i++) {
+          // Generate points on sphere surface
+          const phi = Math.acos(-1 + 2 * Math.random());
+          const theta = Math.random() * 2 * Math.PI;
+          const radius = 1.01; // Slightly outside the sphere
+
+          positions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
+          positions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
+          positions[i * 3 + 2] = radius * Math.cos(phi);
+        }
+
+        pointsGeometry.setAttribute(
+          "position",
+          new THREE.BufferAttribute(positions, 3)
+        );
+
+        const pointsMaterial = new THREE.PointsMaterial({
+          color: 0x00ff88,
+          size: 0.05,
+          transparent: true,
+          opacity: 0.8,
+        });
+
+        const points = new THREE.Points(pointsGeometry, pointsMaterial);
+        scene.add(points);
+
+        // Mouse interaction
+        let mouseX = 0,
+          mouseY = 0;
+        let targetRotationX = 0,
+          targetRotationY = 0;
+
+        const moveTarget = window.parent || window;
+        moveTarget.addEventListener("mousemove", (event) => {
+          mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+          mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+          targetRotationX = mouseY * 0.3;
+          targetRotationY = mouseX * 0.3;
+        });
+
+        function animate() {
+          requestAnimationFrame(animate);
+
+          // Smooth rotation towards target
+          globe.rotation.x += (targetRotationX - globe.rotation.x) * 0.05;
+          globe.rotation.y +=
+            (targetRotationY - globe.rotation.y) * 0.05 + 0.005; // Auto rotate
+
+          points.rotation.x = globe.rotation.x;
+          points.rotation.y = globe.rotation.y;
+
+          renderer.render(scene, camera);
+        }
+        animate();
+
+        // Handle window resize
+        window.addEventListener("resize", () => {
+          camera.aspect = canvas.clientWidth / canvas.clientHeight;
+          camera.updateProjectionMatrix();
+          renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+        });
+      })();
+    </script>
+  </body>
+</html>

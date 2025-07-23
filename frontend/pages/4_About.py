@@ -67,7 +67,7 @@ def _render_key_features():
     with col1:
         render_feature_card(
             "View the Dashboard",
-            "Get a quick overview of all policies and their effectiveness scores.",
+            "Get a quick overview and navigate to different sections of the platform.",
             "dashboard.svg"
         )
         render_feature_card(
@@ -77,15 +77,15 @@ def _render_key_features():
         )
         render_feature_card(
             "Chat with the AI",
-            "Ask questions in plain English to get simple answers about complex policies.",
+            "Ask questions in plain English or generate policy petitions based on data.",
             "chatbot.svg"
         )
     
     with col2:
         render_feature_card(
-            "Analyze Policies",
-            "Dig into the details of specific policies to see what makes them work.",
-            "policy-analysis.svg"
+            "Use ML Predictions",
+            "Predict digital presence using machine learning models based on various factors.",
+            "ml-prediction.svg"
         )
         render_feature_card(
             "Check Demographics",
@@ -159,7 +159,7 @@ def _render_contact_info():
     ### Project Information:
     
     This is an educational template project designed to demonstrate best practices 
-    in policy analysis platform development. The codebase follows modern software 
+    in digital divide data platform development. The codebase follows modern software 
     engineering principles including:
     
     - **Modular Architecture**: Clean separation of concerns

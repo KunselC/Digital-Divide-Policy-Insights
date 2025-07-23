@@ -76,7 +76,7 @@ def main():
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
     # Printing the statement on how many models are being tested and how many samples are being trained
-    print(f"\n📊 Training on {len(X_train)} samples, testing on {len(X_test)}") # Code from the codegeek
+    print(f"\nTraining on {len(X_train)} samples, testing on {len(X_test)}") # Code from the codegeek
 
     # The model is successfully trained
     pipeline.fit(X_train, y_train)
@@ -121,8 +121,8 @@ def main():
     with open("models/regression_model.pkl", "wb") as f:
         pickle.dump(pipeline, f)
     
-    print("\n✅ Model saved to models/regression_model.pkl")
-    print("📊 Feature importance plot saved to plots/feature_importance.png")
+    print("\nModel saved to models/regression_model.pkl")
+    print("Feature importance plot saved to plots/feature_importance.png")
 
 
 if __name__ == "__main__":

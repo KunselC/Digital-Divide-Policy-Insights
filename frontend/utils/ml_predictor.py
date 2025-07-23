@@ -143,7 +143,7 @@ class DigitalDividePredictor:
 
 def render_ml_analysis():
     """Render the ML analysis section in Streamlit."""
-    st.header("🤖 Machine Learning Analysis")
+    st.header("Machine Learning Analysis")
     st.subheader("Digital Divide Prediction Model")
     
     # Initialize predictor
@@ -154,14 +154,14 @@ def render_ml_analysis():
         df = predictor.load_data()
     
     # Display data info
-    st.info(f"📊 Dataset loaded with {len(df)} countries and {len(predictor.features)} features")
+    st.info(f"Dataset loaded with {len(df)} countries and {len(predictor.features)} features")
     
     # Show data preview
-    with st.expander("📋 View Dataset"):
+    with st.expander("View Dataset"):
         st.dataframe(df.head(10))
     
     # Train model
-    if st.button("🚀 Train Model", type="primary"):
+    if st.button("Train Model", type="primary"):
         with st.spinner("Training machine learning model..."):
             results = predictor.train_model(df)
         
@@ -180,7 +180,7 @@ def render_ml_analysis():
         importance_df = predictor.get_feature_importance()
         
         if importance_df is not None:
-            st.subheader("🎯 Feature Importance")
+            st.subheader("Feature Importance")
             st.caption("What drives digital presence the most?")
             
             # Create horizontal bar chart
@@ -194,14 +194,14 @@ def render_ml_analysis():
             st.pyplot(fig)
             
             # Show top features
-            st.subheader("🏆 Top Contributing Factors")
+            st.subheader("Top Contributing Factors")
             top_features = importance_df.tail(3)
             
             for _, row in top_features.iterrows():
                 st.write(f"**{row['feature']}**: {row['importance']:.3f}")
         
         # Model performance visualization
-        st.subheader("📈 Model Performance")
+        st.subheader("Model Performance")
         
         # Actual vs Predicted scatter plot
         fig2, ax2 = plt.subplots(figsize=(8, 6))
@@ -217,7 +217,7 @@ def render_ml_analysis():
         
         # Save model
         model_path = predictor.save_model()
-        st.success(f"✅ Model trained and saved successfully! Model file: {model_path}")
+        st.success(f"Model trained and saved successfully! Model file: {model_path}")
         
         # Prediction interface
         st.subheader("🔮 Make Predictions")
@@ -237,7 +237,7 @@ def render_ml_analysis():
             edu_index = st.slider("Education Index", 0.0, 1.0, 0.85)
             cs_graduates = st.slider("CS Graduates per Capita", 0.0, 50.0, 15.0)
         
-        if st.button("🎯 Predict Web Presence"):
+        if st.button("Predict Web Presence"):
             input_data = np.array([[
                 internet_pen, broadband_speed, gdp_per_capita, electricity_access,
                 urban_pop, mobile_subs, edu_index, cs_graduates
@@ -246,7 +246,7 @@ def render_ml_analysis():
             prediction = predictor.predict(input_data)
             
             if prediction is not None:
-                st.success(f"🌐 Predicted Web Pages per Million: **{prediction[0]:.0f}**")
+                st.success(f"Predicted Web Pages per Million: **{prediction[0]:.0f}**")
             else:
                 st.error("Model not trained yet. Please train the model first.")
     
@@ -255,7 +255,7 @@ def render_ml_analysis():
         with st.spinner("Loading pre-trained model..."):
             try:
                 predictor.load_model()
-                st.success("✅ Pre-trained model loaded successfully!")
+                st.success("Pre-trained model loaded successfully!")
             except Exception as e:
                 st.error(f"Error loading model: {e}")
 

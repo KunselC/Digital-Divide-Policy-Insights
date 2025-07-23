@@ -29,7 +29,7 @@ import seaborn as sns
 # Configure page
 st.set_page_config(
     page_title="ML Prediction - NetEquity",
-    page_icon="🤖",
+    page_icon=None,
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -260,7 +260,7 @@ def render_notebook_export(predictor):
     st.subheader("🔬 Advanced Analysis")
     st.caption("Run the comprehensive regression analysis with detailed output")
     
-    if st.button("🚀 Run Complete Regression Analysis", type="secondary"):
+    if st.button("Run Complete Regression Analysis", type="secondary"):
         with st.spinner("Running comprehensive regression analysis..."):
             # Run the standalone script
             import subprocess
@@ -272,10 +272,10 @@ def render_notebook_export(predictor):
                 ], capture_output=True, text=True, cwd=os.getcwd())
                 
                 if result.returncode == 0:
-                    st.success("✅ Analysis completed successfully!")
+                    st.success("Analysis completed successfully!")
                     
                     # Show the output
-                    with st.expander("📋 Analysis Output"):
+                    with st.expander("Analysis Output"):
                         st.code(result.stdout, language="text")
                     
                     # Show the plot if it was generated
@@ -283,10 +283,10 @@ def render_notebook_export(predictor):
                     if os.path.exists(plot_path):
                         st.image(plot_path, caption="Generated Feature Importance Plot")
                 else:
-                    st.error(f"❌ Analysis failed: {result.stderr}")
+                    st.error(f"Analysis failed: {result.stderr}")
                     
             except Exception as e:
-                st.error(f"❌ Error running analysis: {str(e)}")
+                st.error(f"Error running analysis: {str(e)}")
 
 def render_dataset_overview(predictor):
     """Render the dataset overview section."""
@@ -422,7 +422,7 @@ def render_model_training(predictor):
     
     with col2:
         train_button = st.button(
-            "🚀 Train Model",
+            "Train Model",
             type="primary",
             use_container_width=True,
             help="Train the machine learning model"
@@ -439,7 +439,7 @@ def render_model_training(predictor):
         results = st.session_state.model_results
         
         # Success message
-        st.success("✅ Model training completed successfully!")
+        st.success("Model training completed successfully!")
         
         # Performance metrics
         st.subheader("Model Performance")
@@ -490,7 +490,7 @@ def render_feature_analysis(predictor):
     st.caption("Understand which factors most influence digital presence")
     
     if 'trained_predictor' not in st.session_state:
-        st.warning("⚠️ Please train the model first in the 'Model Training' tab.")
+        st.warning("Please train the model first in the 'Model Training' tab.")
         return
     
     trained_predictor = st.session_state.trained_predictor
@@ -557,7 +557,7 @@ def render_feature_analysis(predictor):
     # Show the feature importance plot if it exists
     plot_path = "plots/feature_importance.png"
     if os.path.exists(plot_path):
-        st.subheader("📈 Generated Feature Importance Plot")
+        st.subheader("Generated Feature Importance Plot")
         st.image(plot_path, caption="Feature importance plot from the regression model")
 
 def render_prediction_interface(predictor):
@@ -566,7 +566,7 @@ def render_prediction_interface(predictor):
     st.caption("Use the trained model to predict web presence for different scenarios")
     
     if 'trained_predictor' not in st.session_state:
-        st.warning("⚠️ Please train the model first in the 'Model Training' tab.")
+        st.warning("Please train the model first in the 'Model Training' tab.")
         return
     
     trained_predictor = st.session_state.trained_predictor
@@ -627,7 +627,7 @@ def render_prediction_interface(predictor):
     
     with col1:
         predict_button = st.button(
-            "🎯 Make Prediction",
+            "Make Prediction",
             type="primary",
             use_container_width=True
         )
@@ -648,11 +648,11 @@ def render_prediction_interface(predictor):
             st.subheader("Prediction Insights")
             
             if prediction[0] > 3000:
-                st.success("🌟 **High Digital Presence**: This scenario indicates strong web engagement and digital economy participation.")
+                st.success("**High Digital Presence**: This scenario indicates strong web engagement and digital economy participation.")
             elif prediction[0] > 1500:
-                st.info("📈 **Moderate Digital Presence**: Good foundation with room for growth in digital infrastructure.")
+                st.info("**Moderate Digital Presence**: Good foundation with room for growth in digital infrastructure.")
             else:
-                st.warning("📊 **Low Digital Presence**: Significant opportunities for digital development and infrastructure investment.")
+                st.warning("**Low Digital Presence**: Significant opportunities for digital development and infrastructure investment.")
         else:
             st.error("Unable to make prediction. Please check the model training.")
     
@@ -665,11 +665,11 @@ def render_prediction_interface(predictor):
             "internet": 90, "broadband": 80, "gdp": 60000, "electricity": 100,
             "urban": 80, "mobile": 120, "education": 0.9, "cs_grads": 25
         },
-        "🌍 Emerging Economy": {
+        "Emerging Economy": {
             "internet": 60, "broadband": 25, "gdp": 15000, "electricity": 85,
             "urban": 50, "mobile": 100, "education": 0.7, "cs_grads": 10
         },
-        "🏝️ Rural/Remote Area": {
+        "Rural/Remote Area": {
             "internet": 30, "broadband": 10, "gdp": 8000, "electricity": 60,
             "urban": 20, "mobile": 80, "education": 0.5, "cs_grads": 3
         }

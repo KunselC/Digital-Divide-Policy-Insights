@@ -37,8 +37,8 @@ def get_icon(icon_name: str, **kwargs) -> str:
         except Exception:
             pass
 
-    # Default style
-    style = "width: 24px; height: 24px; margin-right: 8px; vertical-align: middle;"
+    # Default style - small size to match text
+    style = "width: 16px; height: 16px; margin-right: 6px; vertical-align: middle; display: inline-block;"
     
     # Apply overrides from kwargs
     for key, value in kwargs.items():
@@ -147,11 +147,11 @@ def load_custom_css():
 
 def display_page_header(title: str, subtitle: str = "", icon_name: str = ""):
     """Display a styled page header with optional icon."""
-    icon_html = get_icon(icon_name, width="32px", height="32px") if icon_name else ""
+    icon_html = get_icon(icon_name, width="28px", height="28px") if icon_name else ""
     
     st.markdown(f"""
     <div style="margin-bottom: 2rem;">
-        <h1 style="display: flex; align-items: center; margin-bottom: 0.5rem;">
+        <h1 style="display: flex; align-items: center; margin-bottom: 0.5rem; font-size: 2rem; line-height: 1.2;">
             {icon_html}{title}
         </h1>
         {f'<p style="color: var(--text-secondary); font-size: 1.1rem; margin: 0;">{subtitle}</p>' if subtitle else ''}
@@ -211,7 +211,7 @@ def render_info_box(content: str, box_type: str = "info"):
     """Render an information box with different types."""
     colors = {
         "info": "var(--primary-color)",
-        "success": "var(--success-color)",
+        "success": "var(--success-color)",  
         "warning": "var(--warning-color)",
         "error": "var(--error-color)"
     }
@@ -242,24 +242,67 @@ def render_section_header(title: str, description: str = None):
 
 def display_3d_globe_component():
     """Display the 3D globe component."""
+    st.info("Loading 3D model... This may take a moment due to the file size.")
+    
     model_uri = get_model_as_base64("submarine_fiber_optic_cable_network.glb")
     
-    if model_uri:
-        # Read the HTML template
-        html_template_path = ASSETS_PATH / "background.html"
-        if html_template_path.exists():
-            with open(html_template_path, "r") as f:
-                html_content = f.read()
-            
-            # Replace placeholder with actual model URI
-            html_content = html_content.replace("{{MODEL_URI}}", model_uri)
-            
-            # Display the 3D model
-            st.components.v1.html(html_content, height=600)
-        else:
-            st.error("3D model template not found")
-    else:
-        st.error("Could not load 3D model. Please check that the model file exists.")
+    if not model_uri:
+        st.error("Failed to generate model URI - 3D model file not found")
+        return
+    
+    # Load the HTML template
+    try:
+        template_path = ASSETS_PATH / "modern_3d.html"
+        with open(template_path, 'r', encoding='utf-8') as f:
+            html_template = f.read()
+        
+        # Replace the model URI placeholder
+        html_content = html_template.replace("{{MODEL_URI}}", model_uri)
+        
+        # Display in Streamlit
+        st.components.v1.html(html_content, height=600, scrolling=False)
+        
+        # Show debug info below
+        with st.expander("Debug Info"):
+            st.write(f"Model URI length: {len(model_uri):,} characters")
+            if len(model_uri) > 10000000:  # 10MB
+                st.warning("Large model file detected!")
+                st.markdown("""
+                The 3D model is quite large (9.7MB → 13.6MB base64 encoded). 
+                If the model doesn't load properly, this is likely due to browser memory limitations.
+                
+                **Potential solutions:**
+                - Use a smaller, optimized 3D model file
+                - Load the model from a URL instead of embedding it
+                - Implement progressive loading
+                """)
+            else:
+                st.success("Model size is within reasonable limits")
+                
+    except FileNotFoundError:
+        st.error("HTML template not found - cannot display 3D model")
+    except Exception as e:
+        st.error(f"Error loading 3D model: {str(e)}")
+        # Show fallback
+        st.markdown("""
+        <div style="
+            height: 600px; 
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+            font-family: 'Inter', sans-serif;
+        ">
+            <div>
+                <h3 style="margin: 0 0 1rem 0;">Global Submarine Cable Network</h3>
+                <p style="margin: 0;">3D Model temporarily unavailable</p>
+                <p style="margin: 0.5rem 0 0 0; opacity: 0.8;">Please try refreshing the page</p>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
 
 def format_metric_value(value, format_type: str = "auto") -> str:
     """Format metric values for display."""
@@ -271,3 +314,19 @@ def format_metric_value(value, format_type: str = "auto") -> str:
         return f"{value:,.0f}"
     else:
         return str(value)
+
+def render_feature_card(title: str, description: str, icon_name: str = ""):
+    """Render a feature card with icon, title, and description."""
+    icon_html = get_icon(icon_name, width="24px", height="24px") if icon_name else ""
+    
+    st.markdown(f"""
+    <div class="content-box" style="margin: 1rem 0;">
+        <div style="display: flex; align-items: flex-start; gap: 1rem;">
+            {icon_html}
+            <div>
+                <h4 style="margin: 0 0 0.5rem 0; color: var(--text-primary);">{title}</h4>
+                <p style="margin: 0; color: var(--text-secondary); line-height: 1.5;">{description}</p>
+            </div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
