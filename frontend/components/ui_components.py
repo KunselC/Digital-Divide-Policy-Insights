@@ -70,6 +70,7 @@ def load_custom_css():
             --radius-sm: 0.375rem;
             --radius-md: 0.5rem;
             --radius-lg: 0.75rem;
+            --card-bg: rgba(255, 255, 255, 0.9);
         }
 
         /* Interactive Parallax Background */
@@ -603,27 +604,47 @@ def display_info_card(title, content, icon_name=None):
     """, unsafe_allow_html=True)
 
 
-def display_feature_card(title, content, icon_name=None):
+def render_feature_card(title: str, description: str, icon_name: str = None):
     """
-    Displays a feature card with a title, content, and an optional icon.
+    Render a feature card with title, description, and optional icon.
     
     Args:
-        title: The title of the feature.
-        content: A short description of the feature.
-        icon_name: Optional name of an icon file from assets.
+        title: Card title
+        description: Card description
+        icon_name: Optional icon filename
     """
     icon_html = ""
     if icon_name:
-        icon_data_uri = get_icon(icon_name)
-        icon_html = f'<img src="{icon_data_uri}" style="height: 24px; width: 24px; margin-right: 10px; vertical-align: middle;">'
-
-    card_html = f"""
-        <div class="feature-card">
-            <h4>{icon_html}{title}</h4>
-            <p>{content}</p>
-        </div>
-    """
-    st.markdown(card_html, unsafe_allow_html=True)
+        icon_data = get_icon(icon_name)
+        if icon_data:
+            icon_html = f'<img src="{icon_data}" alt="{title}" style="width: 24px; height: 24px; margin-right: 0.5rem; vertical-align: middle;">'
+    
+    st.markdown(f"""
+    <div style="
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-lg);
+        padding: 1.5rem;
+        margin: 0.5rem 0;
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+        cursor: pointer;
+    " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 25px rgba(0,0,0,0.1)'" 
+       onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+        <h4 style="
+            margin: 0 0 0.5rem 0;
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            font-weight: 600;
+        ">{icon_html}{title}</h4>
+        <p style="
+            margin: 0;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        ">{description}</p>
+    </div>
+    """, unsafe_allow_html=True)
 
 
 def display_interactive_background():
