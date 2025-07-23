@@ -144,3 +144,4 @@ cython_debug/
 
 # macOS
 .DS_Store
+.streamlit/secrets.toml
