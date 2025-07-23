@@ -29,14 +29,20 @@ def render_data_trends_page():
     correlation_data = api_client.get("/api/data/correlation")
     demographics_data = api_client.get("/api/data/demographics")
     
+    st.markdown('<div class="content-box">', unsafe_allow_html=True)
     if trends_data:
         _render_trend_analysis(trends_data)
+    st.markdown('</div>', unsafe_allow_html=True)
     
+    st.markdown('<div class="content-box">', unsafe_allow_html=True)
     if demographics_data:
         _render_demographics_analysis(demographics_data)
+    st.markdown('</div>', unsafe_allow_html=True)
     
+    st.markdown('<div class="content-box">', unsafe_allow_html=True)
     if correlation_data:
         _render_correlation_analysis(correlation_data)
+    st.markdown('</div>', unsafe_allow_html=True)
 
 
 def _render_trend_analysis(trends_data: dict):
@@ -126,22 +132,24 @@ def _render_income_analysis(income_data: dict):
         text=df['Income Level'],
         mode='markers',
         marker=dict(
-            size=12,
-            color=df['digital_literacy'], # set color to a variable
-            colorscale='Viridis',   # choose a colorscale
-            opacity=0.8,
+            size=10,
+            color=df['digital_literacy'], 
+            colorscale='Blues',
+            opacity=0.9,
             colorbar=dict(title='Digital Literacy')
         )
     )])
     
     fig.update_layout(
-        title="Digital Access Metrics by Income Level",
+        title_text="Digital Access Metrics by Income Level",
         scene=dict(
             xaxis_title='Internet Access (%)',
             yaxis_title='Device Ownership (%)',
-            zaxis_title='Digital Literacy (%)'
+            zaxis_title='Digital Literacy (Est.)'
         ),
-        margin=dict(r=20, b=10, l=10, t=40)
+        margin=dict(r=20, b=10, l=10, t=40),
+        paper_bgcolor="rgba(0,0,0,0)",
+        scene_camera=dict(eye=dict(x=1.87, y=0.88, z=-0.64))
     )
     st.plotly_chart(fig, use_container_width=True)
 
@@ -172,16 +180,12 @@ def _render_geographic_analysis(geo_data: dict):
     )])
 
     fig.update_layout(
-        title="Broadband Penetration and Speed by Location",
+        title_text="Broadband Penetration & Speed by Location",
         xaxis_title="Location",
         yaxis_title="Broadband Penetration (%)",
-        scene=dict(
-            xaxis=dict(title='Location'),
-            yaxis=dict(title='Broadband Penetration (%)'),
-            zaxis=dict(title='Average Speed (Mbps)'),
-        ),
-        # This is a 2D chart styled to look more dynamic, as true 3D bars can be misleading.
-        # For a true 3D bar chart, one would need a third axis variable.
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
+        font_color="var(--text-primary)"
     )
     st.plotly_chart(fig, use_container_width=True)
 
@@ -193,8 +197,18 @@ def _render_age_analysis(age_data: dict):
     df = pd.DataFrame(age_data).T.reset_index()
     df.columns = ['Age Group'] + list(df.columns[1:])
     
-    fig = px.funnel(df, x='Age Group', y='digital_literacy_rate',
-                    title="Digital Literacy Rate by Age Group")
+    fig = px.funnel(
+        df, 
+        x='Age Group', 
+        y='digital_literacy_rate',
+        title="Digital Literacy Rate by Age Group",
+        color_discrete_sequence=px.colors.sequential.Blues_r
+    )
+    fig.update_layout(
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
+        font_color="var(--text-primary)"
+    )
     st.plotly_chart(fig, use_container_width=True)
 
 
@@ -209,8 +223,18 @@ def _render_correlation_analysis(correlation_data: dict):
         
     df = pd.DataFrame(corr_matrix)
     
-    fig = px.imshow(df, text_auto=True, aspect="auto",
-                    title="Correlation Matrix of Digital Divide Indicators")
+    fig = px.imshow(
+        df, 
+        text_auto=True, 
+        aspect="auto",
+        title="Correlation Matrix of Digital Divide Indicators",
+        color_continuous_scale='Blues'
+    )
+    fig.update_layout(
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
+        font_color="var(--text-primary)"
+    )
     st.plotly_chart(fig, use_container_width=True)
 
 
