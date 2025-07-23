@@ -18,6 +18,8 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import Pipeline
 
 
+import os
+
 class DigitalDividePredictor:
     """Machine Learning model for predicting digital divide indicators."""
     
