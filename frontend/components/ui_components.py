@@ -4,6 +4,7 @@ UI styling and component utilities for the Digital Divide Policy frontend.
 
 import streamlit as st
 import base64
+<<<<<<< HEAD
 import os
 
 
@@ -39,6 +40,65 @@ def get_icon(icon_name: str) -> str:
         return f"data:image/svg+xml;base64,{icon_base64}"
     except Exception:
         return ""
+=======
+from pathlib import Path
+
+# --- PATHS ---
+ASSETS_PATH = Path(__file__).parent.parent / "assets"
+ICONS_PATH = ASSETS_PATH / "icons"
+MODELS_PATH = ASSETS_PATH / "models"
+JS_PATH = ASSETS_PATH / "js"
+
+def get_asset_path(asset_dir: Path, asset_name: str) -> Path:
+    """Constructs and checks the path for an asset."""
+    return asset_dir / asset_name
+
+def get_asset_as_base64(asset_path: Path) -> str | None:
+    """Reads an asset file and returns its base64 encoded version."""
+    if not asset_path.is_file():
+        return None
+    try:
+        with open(asset_path, "rb") as f:
+            return base64.b64encode(f.read()).decode()
+    except Exception:
+        return None
+
+def get_icon(icon_name: str, **kwargs) -> str:
+    """
+    Returns the HTML for a styled SVG icon.
+    """
+    icon_path = get_asset_path(ICONS_PATH, icon_name)
+    icon_svg = ""
+    if icon_path.is_file():
+        with open(icon_path, "r", encoding="utf-8") as f:
+            icon_svg = f.read()
+
+    # Default style
+    style = "width: 24px; height: 24px; margin-right: 8px; vertical-align: middle;"
+    
+    # Apply overrides from kwargs
+    for key, value in kwargs.items():
+        css_key = key.replace('_', '-')
+        style += f" {css_key}: {value};"
+
+    return f'<span style="{style}">{icon_svg}</span>'
+
+def get_model_as_base64(model_name: str) -> str | None:
+    """Returns the base64 encoded data URI for a 3D model."""
+    model_path = get_asset_path(MODELS_PATH, model_name)
+    b64_model = get_asset_as_base64(model_path)
+    if b64_model:
+        return f"data:application/octet-stream;base64,{b64_model}"
+    return None
+
+def get_js_as_base64(js_name: str) -> str | None:
+    """Returns the base64 encoded data URI for a JavaScript file."""
+    js_path = get_asset_path(JS_PATH, js_name)
+    b64_js = get_asset_as_base64(js_path)
+    if b64_js:
+        return f"data:application/javascript;base64,{b64_js}"
+    return None
+>>>>>>> origin/main
 
 
 def load_custom_css():
@@ -72,6 +132,7 @@ def load_custom_css():
             --radius-lg: 0.75rem;
         }
 
+<<<<<<< HEAD
         /* Interactive Parallax Background */
         .parallax-container {
             position: fixed;
@@ -118,6 +179,8 @@ def load_custom_css():
         .icon:nth-child(9) { top: 60%; left: 70%; width: 33px; height: 33px; }
         .icon:nth-child(10) { top: 15%; left: 95%; width: 48px; height: 48px; }
 
+=======
+>>>>>>> origin/main
         /* Base Styles */
         body {
             background-color: var(--background-primary);
@@ -168,6 +231,20 @@ def load_custom_css():
             color: var(--text-secondary);
         }
         
+<<<<<<< HEAD
+=======
+        /* Content Box for wrapping sections */
+        .content-box {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px) saturate(150%);
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            margin: 1rem 0;
+            box-shadow: var(--shadow-md);
+        }
+
+>>>>>>> origin/main
         /* Glassmorphism Cards */
         .policy-card, .metric-card, .feature-card {
             background: rgba(255, 255, 255, 0.9);
@@ -529,11 +606,19 @@ def display_page_header(title: str, subtitle: str, icon_name: str = None):
         icon_name: The filename of the icon to display next to the title.
     """
     if icon_name:
+<<<<<<< HEAD
         icon_data_uri = get_icon(icon_name)
         st.markdown(f"""
             <div class="main-header">
                 <div style="display: flex; align-items: center;">
                     <img src="{icon_data_uri}" style="height: 40px; width: 40px; margin-right: 15px;">
+=======
+        icon_html = get_icon(icon_name, width="40px", height="40px", margin_right="15px")
+        st.markdown(f"""
+            <div class="main-header">
+                <div style="display: flex; align-items: center;">
+                    {icon_html}
+>>>>>>> origin/main
                     <div>
                         <h1>{title}</h1>
                         <p>{subtitle}</p>
@@ -560,11 +645,19 @@ def display_main_header(title: str, subtitle: str, icon_name: str = None):
         icon_name: The filename of the icon to display above the title.
     """
     if icon_name:
+<<<<<<< HEAD
         icon_data_uri = get_icon(icon_name)
         st.markdown(f"""
             <div class="main-header">
                 <div style="display: flex; align-items: center;">
                     <img src="{icon_data_uri}" style="height: 40px; width: 40px; margin-right: 15px;">
+=======
+        icon_html = get_icon(icon_name, width="40px", height="40px", margin_right="15px")
+        st.markdown(f"""
+            <div class="main-header">
+                <div style="display: flex; align-items: center;">
+                    {icon_html}
+>>>>>>> origin/main
                     <div>
                         <h1>{title}</h1>
                         <p>{subtitle}</p>
@@ -603,6 +696,7 @@ def display_info_card(title, content, icon_name=None):
     """, unsafe_allow_html=True)
 
 
+<<<<<<< HEAD
 def display_feature_card(title, content, icon_name=None):
     """
     Displays a feature card with a title, content, and an optional icon.
@@ -616,6 +710,20 @@ def display_feature_card(title, content, icon_name=None):
     if icon_name:
         icon_data_uri = get_icon(icon_name)
         icon_html = f'<img src="{icon_data_uri}" style="height: 24px; width: 24px; margin-right: 10px; vertical-align: middle;">'
+=======
+def render_feature_card(title: str, content: str, icon_name: str = None):
+    """
+    Renders a feature card with optional icon.
+    
+    Args:
+        title: Card title
+        content: Card content
+        icon_name: Optional name of an icon file from assets
+    """
+    icon_html = ""
+    if icon_name:
+        icon_html = get_icon(icon_name)
+>>>>>>> origin/main
 
     card_html = f"""
         <div class="feature-card">
@@ -626,6 +734,7 @@ def display_feature_card(title, content, icon_name=None):
     st.markdown(card_html, unsafe_allow_html=True)
 
 
+<<<<<<< HEAD
 def display_interactive_background():
     """Displays the interactive parallax background with SVG icons."""
     
@@ -707,3 +816,191 @@ def display_page_header(title: str, subtitle: str, icon_name: str = None):
                 <p>{subtitle}</p>
             </div>
         """, unsafe_allow_html=True)
+=======
+def display_3d_globe_component():
+    """
+    Renders an interactive 3D globe using Three.js in a Streamlit component.
+    """
+    st.info("Loading 3D model... This may take a moment for the detailed submarine cable network.")
+    
+    model_base64 = get_model_as_base64("submarine_fiber_optic_cable_network.glb")
+    
+    if not model_base64:
+        st.error("3D model file not found or could not be loaded.")
+        return
+
+    html_content = f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <style>
+            body {{ margin: 0; background-color: transparent; }}
+            canvas {{ display: block; width: 100%; height: 100%; }}
+            #loading {{
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                color: #2563eb;
+                font-family: Inter, sans-serif;
+                font-size: 18px;
+            }}
+        </style>
+    </head>
+    <body>
+        <div id="loading">Loading 3D submarine cable network...</div>
+        <script type="importmap">
+        {{
+            "imports": {{
+                "three": "https://unpkg.com/three@0.164.1/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.164.1/examples/jsm/"
+            }}
+        }}
+        </script>
+        <script type="module">
+            import * as THREE from 'three';
+            import {{ OrbitControls }} from 'three/addons/controls/OrbitControls.js';
+            import {{ GLTFLoader }} from 'three/addons/loaders/GLTFLoader.js';
+
+            let scene, camera, renderer, controls;
+
+            function base64ToArrayBuffer(base64) {{
+                const binaryString = atob(base64.split(',')[1]);
+                const len = binaryString.length;
+                const bytes = new Uint8Array(len);
+                for (let i = 0; i < len; i++) {{
+                    bytes[i] = binaryString.charCodeAt(i);
+                }}
+                return bytes.buffer;
+            }}
+
+            function hideLoading() {{
+                const loading = document.getElementById('loading');
+                if (loading) loading.style.display = 'none';
+            }}
+
+            function init() {{
+                // Scene
+                scene = new THREE.Scene();
+                scene.background = null; // Transparent background
+
+                // Camera
+                camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+                camera.position.set(0, 0, 3);
+
+                // Renderer
+                const canvas = document.createElement('canvas');
+                document.body.appendChild(canvas);
+                renderer = new THREE.WebGLRenderer({{ canvas: canvas, alpha: true, antialias: true }});
+                renderer.setSize(window.innerWidth, 500);
+
+                // Controls
+                controls = new OrbitControls(camera, renderer.domElement);
+                controls.enableDamping = true;
+                controls.dampingFactor = 0.05;
+                controls.screenSpacePanning = false;
+                controls.minDistance = 1;
+                controls.maxDistance = 10;
+                controls.autoRotate = true;
+                controls.autoRotateSpeed = 0.5;
+
+                // Lighting
+                const ambientLight = new THREE.AmbientLight(0xffffff, 1.2);
+                scene.add(ambientLight);
+                const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+                directionalLight.position.set(10, 10, 5);
+                scene.add(directionalLight);
+
+                // GLTF Loader
+                const loader = new GLTFLoader();
+                
+                // Convert base64 to ArrayBuffer and load
+                try {{
+                    const arrayBuffer = base64ToArrayBuffer('{model_base64}');
+                    loader.parse(arrayBuffer, '', function (gltf) {{
+                        const model = gltf.scene;
+                        
+                        // Center and scale the model
+                        const box = new THREE.Box3().setFromObject(model);
+                        const center = box.getCenter(new THREE.Vector3());
+                        model.position.sub(center);
+                        
+                        const size = box.getSize(new THREE.Vector3());
+                        const maxDim = Math.max(size.x, size.y, size.z);
+                        const scale = 2 / maxDim;
+                        model.scale.set(scale, scale, scale);
+                        
+                        scene.add(model);
+                        hideLoading();
+                        animate(); // Start animation loop after model loads
+                    }}, function (progress) {{
+                        console.log('Loading progress:', progress);
+                    }}, function (error) {{
+                        console.error('An error happened while parsing the model:', error);
+                        hideLoading();
+                        // Fallback: create a simple wireframe sphere
+                        const geometry = new THREE.SphereGeometry(1, 32, 32);
+                        const material = new THREE.MeshBasicMaterial({{ color: 0x2563eb, wireframe: true }});
+                        const sphere = new THREE.Mesh(geometry, material);
+                        scene.add(sphere);
+                        animate();
+                    }});
+                }} catch (error) {{
+                    console.error('Error loading model:', error);
+                    hideLoading();
+                    // Fallback: create a simple wireframe sphere
+                    const geometry = new THREE.SphereGeometry(1, 32, 32);
+                    const material = new THREE.MeshBasicMaterial({{ color: 0x2563eb, wireframe: true }});
+                    const sphere = new THREE.Mesh(geometry, material);
+                    scene.add(sphere);
+                    animate();
+                }}
+
+                // Handle window resize
+                window.addEventListener('resize', onWindowResize, false);
+            }}
+
+            function onWindowResize() {{
+                camera.aspect = window.innerWidth / 500;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, 500);
+            }}
+
+            function animate() {{
+                requestAnimationFrame(animate);
+                controls.update();
+                renderer.render(scene, camera);
+            }}
+
+            init();
+        </script>
+    </body>
+    </html>
+    """
+    st.components.v1.html(html_content, height=520, scrolling=False)
+
+
+def display_interactive_background():
+    """
+    Injects HTML and JavaScript for a subtle professional background effect.
+    """
+    background_html = """
+    <style>
+        .stApp {
+            background: #f8fafc;
+        }
+    </style>
+    """
+    st.markdown(background_html, unsafe_allow_html=True)
+
+def display_custom_css():
+    """
+    Displays the custom CSS for the application.
+    """
+    css_uri = get_js_as_base64("styles.css")
+    if not css_uri:
+        st.warning("Could not load the custom CSS file.")
+        return
+
+    st.markdown(f'<link href="{css_uri}" rel="stylesheet">', unsafe_allow_html=True)
+>>>>>>> origin/main

@@ -1,16 +1,25 @@
 """
 NetEquity: Digital Divide Policy Insights
+<<<<<<< HEAD
+=======
+
+This is the main entry point for the Streamlit application.
+>>>>>>> origin/main
 """
 
 import streamlit as st
 import sys
 import os
+<<<<<<< HEAD
 import pandas as pd
 import plotly.express as px
+=======
+>>>>>>> origin/main
 
 # Add the current directory to the Python path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
+<<<<<<< HEAD
 from config import STREAMLIT_CONFIG, APP_TITLE, APP_SUBTITLE
 from components.ui_components import (
     load_custom_css, 
@@ -116,6 +125,13 @@ def configure_app():
     st.set_page_config(**STREAMLIT_CONFIG, page_icon="frontend/assets/icons/dashboard.svg")
     load_custom_css()
 
+=======
+from config import STREAMLIT_CONFIG, APP_TITLE
+from components.ui_components import (
+    load_custom_css, 
+    display_interactive_background
+)
+>>>>>>> origin/main
 
 def main():
     """Main function to run the Streamlit application."""
@@ -123,6 +139,7 @@ def main():
     load_custom_css()
     display_interactive_background()
     
+<<<<<<< HEAD
     render_dashboard()
 
     render_info_box(
@@ -131,6 +148,11 @@ def main():
         "It uses a mix of real and sample data to show what's possible."
     )
 
+=======
+    st.title(f"Welcome to {APP_TITLE}")
+    st.markdown("Select a page from the sidebar to explore digital divide policies and data.")
+    st.sidebar.success("Select a page above.")
+>>>>>>> origin/main
 
 if __name__ == "__main__":
     main()

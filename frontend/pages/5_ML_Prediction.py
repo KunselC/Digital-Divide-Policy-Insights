@@ -29,7 +29,11 @@ import seaborn as sns
 # Configure page
 st.set_page_config(
     page_title="ML Prediction - NetEquity",
+<<<<<<< HEAD
     page_icon="🤖",
+=======
+    page_icon=get_icon("ml-prediction.svg"),
+>>>>>>> origin/main
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -52,8 +56,38 @@ def render_ml_page():
     predictor = DigitalDividePredictor()
     
     # Create tabs for different sections
+<<<<<<< HEAD
     # Only show ML Dataset Overview tab
     render_dataset_overview(predictor)
+=======
+    tab1, tab2, tab3, tab4 = st.tabs([
+        "Dataset Overview", 
+        "Model Training", 
+        "Feature Analysis", 
+        "Make Predictions"
+    ])
+    
+    with tab1:
+        st.markdown('<div class="content-box">', unsafe_allow_html=True)
+        render_dataset_overview(predictor)
+        st.markdown('</div>', unsafe_allow_html=True)
+    
+    with tab2:
+        st.markdown('<div class="content-box">', unsafe_allow_html=True)
+        render_model_training(predictor)
+        st.markdown('</div>', unsafe_allow_html=True)
+    
+    with tab3:
+        st.markdown('<div class="content-box">', unsafe_allow_html=True)
+        render_feature_analysis(predictor)
+        st.markdown('</div>', unsafe_allow_html=True)
+    
+    with tab4:
+        st.markdown('<div class="content-box">', unsafe_allow_html=True)
+        render_prediction_interface(predictor)
+        st.markdown('</div>', unsafe_allow_html=True)
+
+>>>>>>> origin/main
 def render_notebook_prediction_gui():
     """GUI for notebook-style prediction function."""
     st.subheader("Notebook-Style ML Prediction")
@@ -257,10 +291,18 @@ def render_notebook_export(predictor):
     )
 
     # Add a section to run the original regression script
+<<<<<<< HEAD
     st.subheader("🔬 Advanced Analysis")
     st.caption("Run the comprehensive regression analysis with detailed output")
     
     if st.button("🚀 Run Complete Regression Analysis", type="secondary"):
+=======
+    st.markdown('<div class="content-box">', unsafe_allow_html=True)
+    st.subheader("Advanced Analysis")
+    st.caption("Run the comprehensive regression analysis with detailed output")
+    
+    if st.button("Run Complete Regression Analysis", type="secondary"):
+>>>>>>> origin/main
         with st.spinner("Running comprehensive regression analysis..."):
             # Run the standalone script
             import subprocess
@@ -272,10 +314,17 @@ def render_notebook_export(predictor):
                 ], capture_output=True, text=True, cwd=os.getcwd())
                 
                 if result.returncode == 0:
+<<<<<<< HEAD
                     st.success("✅ Analysis completed successfully!")
                     
                     # Show the output
                     with st.expander("📋 Analysis Output"):
+=======
+                    st.success("Analysis completed successfully!")
+                    
+                    # Show the output
+                    with st.expander("Analysis Output"):
+>>>>>>> origin/main
                         st.code(result.stdout, language="text")
                     
                     # Show the plot if it was generated
@@ -283,10 +332,18 @@ def render_notebook_export(predictor):
                     if os.path.exists(plot_path):
                         st.image(plot_path, caption="Generated Feature Importance Plot")
                 else:
+<<<<<<< HEAD
                     st.error(f"❌ Analysis failed: {result.stderr}")
                     
             except Exception as e:
                 st.error(f"❌ Error running analysis: {str(e)}")
+=======
+                    st.error(f"Analysis failed: {result.stderr}")
+                    
+            except Exception as e:
+                st.error(f"Error running analysis: {str(e)}")
+    st.markdown('</div>', unsafe_allow_html=True)
+>>>>>>> origin/main
 
 def render_dataset_overview(predictor):
     """Render the dataset overview section."""
@@ -422,7 +479,11 @@ def render_model_training(predictor):
     
     with col2:
         train_button = st.button(
+<<<<<<< HEAD
             "🚀 Train Model",
+=======
+            "Train Model",
+>>>>>>> origin/main
             type="primary",
             use_container_width=True,
             help="Train the machine learning model"
@@ -439,7 +500,11 @@ def render_model_training(predictor):
         results = st.session_state.model_results
         
         # Success message
+<<<<<<< HEAD
         st.success("✅ Model training completed successfully!")
+=======
+        st.success("Model training completed successfully!")
+>>>>>>> origin/main
         
         # Performance metrics
         st.subheader("Model Performance")
@@ -462,15 +527,23 @@ def render_model_training(predictor):
         st.subheader("Prediction Accuracy")
         
         fig, ax = plt.subplots(figsize=(10, 6))
+<<<<<<< HEAD
         ax.scatter(results['y_test'], results['predictions'], alpha=0.7, color='#00d4ff', s=60)
         ax.plot([results['y_test'].min(), results['y_test'].max()], 
                 [results['y_test'].min(), results['y_test'].max()], 
                 color='#ff6b6b', linestyle='--', linewidth=2, label='Perfect Prediction')
+=======
+        ax.scatter(results['y_test'], results['predictions'], alpha=0.7, color='var(--primary-color)', s=60)
+        ax.plot([results['y_test'].min(), results['y_test'].max()], 
+                [results['y_test'].min(), results['y_test'].max()], 
+                color='var(--error-color)', linestyle='--', linewidth=2, label='Perfect Prediction')
+>>>>>>> origin/main
         
         ax.set_xlabel('Actual Web Pages per Million')
         ax.set_ylabel('Predicted Web Pages per Million')
         ax.set_title('Model Prediction Accuracy')
         ax.legend()
+<<<<<<< HEAD
         ax.grid(True, alpha=0.3)
         
         # Set dark theme
@@ -480,6 +553,9 @@ def render_model_training(predictor):
         ax.xaxis.label.set_color('white')
         ax.yaxis.label.set_color('white')
         ax.title.set_color('white')
+=======
+        ax.grid(True, alpha=0.2)
+>>>>>>> origin/main
         
         st.pyplot(fig)
         plt.close()
@@ -490,7 +566,11 @@ def render_feature_analysis(predictor):
     st.caption("Understand which factors most influence digital presence")
     
     if 'trained_predictor' not in st.session_state:
+<<<<<<< HEAD
         st.warning("⚠️ Please train the model first in the 'Model Training' tab.")
+=======
+        st.warning("Please train the model first in the 'Model Training' tab.")
+>>>>>>> origin/main
         return
     
     trained_predictor = st.session_state.trained_predictor
@@ -510,12 +590,17 @@ def render_feature_analysis(predictor):
             x='importance', 
             y='feature', 
             ax=ax, 
+<<<<<<< HEAD
             palette='viridis'
+=======
+            palette='Blues_r'
+>>>>>>> origin/main
         )
         ax.set_title('Feature Importance: Digital Presence Drivers')
         ax.set_xlabel('Importance Score')
         ax.set_ylabel('')
         
+<<<<<<< HEAD
         # Set dark theme
         fig.patch.set_facecolor('#0e1117')
         ax.set_facecolor('#0e1117')
@@ -524,6 +609,8 @@ def render_feature_analysis(predictor):
         ax.yaxis.label.set_color('white')
         ax.title.set_color('white')
         
+=======
+>>>>>>> origin/main
         plt.tight_layout()
         st.pyplot(fig)
         plt.close()
@@ -557,7 +644,11 @@ def render_feature_analysis(predictor):
     # Show the feature importance plot if it exists
     plot_path = "plots/feature_importance.png"
     if os.path.exists(plot_path):
+<<<<<<< HEAD
         st.subheader("📈 Generated Feature Importance Plot")
+=======
+        st.subheader("Generated Feature Importance Plot")
+>>>>>>> origin/main
         st.image(plot_path, caption="Feature importance plot from the regression model")
 
 def render_prediction_interface(predictor):
@@ -566,7 +657,11 @@ def render_prediction_interface(predictor):
     st.caption("Use the trained model to predict web presence for different scenarios")
     
     if 'trained_predictor' not in st.session_state:
+<<<<<<< HEAD
         st.warning("⚠️ Please train the model first in the 'Model Training' tab.")
+=======
+        st.warning("Please train the model first in the 'Model Training' tab.")
+>>>>>>> origin/main
         return
     
     trained_predictor = st.session_state.trained_predictor
@@ -574,6 +669,7 @@ def render_prediction_interface(predictor):
     st.write("**Enter values for a country or scenario:**")
     
     # Input interface
+<<<<<<< HEAD
     col1, col2 = st.columns(2)
     
     with col1:
@@ -632,12 +728,71 @@ def render_prediction_interface(predictor):
             use_container_width=True
         )
     
+=======
+    with st.form(key='prediction_form'):
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.write("**Infrastructure & Economy**")
+            internet_pen = st.slider(
+                "Internet Penetration (%)", 
+                0.0, 100.0, 75.0, 
+                help="Percentage of population with internet access"
+            )
+            broadband_speed = st.slider(
+                "Broadband Speed (Mbps)", 
+                0.0, 100.0, 40.0,
+                help="Average broadband connection speed"
+            )
+            gdp_per_capita = st.slider(
+                "GDP per Capita ($)", 
+                5000, 100000, 35000,
+                help="Economic prosperity indicator"
+            )
+            electricity_access = st.slider(
+                "Electricity Access (%)", 
+                0.0, 100.0, 95.0,
+                help="Reliable electricity infrastructure"
+            )
+        
+        with col2:
+            st.write("**Demographics & Education**")
+            urban_pop = st.slider(
+                "Urban Population (%)", 
+                0.0, 100.0, 70.0,
+                help="Percentage living in cities"
+            )
+            mobile_subs = st.slider(
+                "Mobile Subscriptions (per 100)", 
+                0.0, 200.0, 120.0,
+                help="Mobile phone penetration"
+            )
+            edu_index = st.slider(
+                "Education Index", 
+                0.0, 1.0, 0.85,
+                help="Education development level"
+            )
+            cs_graduates = st.slider(
+                "CS Graduates per Capita", 
+                0.0, 50.0, 15.0,
+                help="Technical education output"
+            )
+        
+        predict_button = st.form_submit_button(
+            label="Make Prediction",
+            type="primary",
+            use_container_width=True
+        )
+
+    # Prediction result
+>>>>>>> origin/main
     if predict_button:
         input_data = np.array([[
             internet_pen, broadband_speed, gdp_per_capita, electricity_access,
             urban_pop, mobile_subs, edu_index, cs_graduates
         ]])
         
+<<<<<<< HEAD
         prediction = trained_predictor.predict(input_data)
         
         if prediction is not None:
@@ -697,3 +852,23 @@ def render_prediction_interface(predictor):
 
 if __name__ == "__main__":
     render_ml_page()
+=======
+        with st.spinner("Making prediction..."):
+            prediction_df = pd.DataFrame(
+                input_data,
+                columns=predictor.features
+            )
+            prediction = trained_predictor.predict(prediction_df)
+            st.session_state.last_prediction = prediction[0]
+
+    if 'last_prediction' in st.session_state:
+        st.success(f"**Predicted Web Pages per Million**: {st.session_state.last_prediction:,.0f}")
+        st.caption("This prediction is based on the trained Random Forest model.")
+
+def main():
+    """Main function to set up and render the page."""
+    render_ml_page()
+
+if __name__ == "__main__":
+    main()
+>>>>>>> origin/main
