@@ -4,14 +4,16 @@
 A modern analytics platform to explore and understand policies designed to close the digital divide.
 =======
 A modern analytics platform for exploring and understanding policies designed to close the digital divide.
->>>>>>> origin/main
+
+> > > > > > > origin/main
 
 ## 🚀 Quick Start
 
 ### Option 1: Local Development
 
 <<<<<<< HEAD
-```bash
+
+````bash
 # Install dependencies
 pip install -r requirements.txt
 
@@ -31,9 +33,10 @@ pip install -r requirements.txt
 >>>>>>> origin/main
 cd frontend
 streamlit run Home.py
-```
+````
 
 <<<<<<< HEAD
+
 ### Option 2: Deploy to Streamlit Cloud (Recommended)
 
 1. **GitHub Repository**: `https://github.com/KunselC/Digital-Divide-Policy-Insights`
@@ -56,9 +59,8 @@ Your app will be live at: `https://netequity.streamlit.app` (or your chosen URL)
   - Feature importance analysis
   - Interactive model training and evaluation
   - Scenario-based predictions
-- **Clean Modern UI**: Professional design with interactive background
-=======
-The application will be accessible at `http://localhost:8501`.
+- # **Clean Modern UI**: Professional design with interactive background
+  The application will be accessible at `http://localhost:8501`.
 
 ### Option 2: Deploy to Streamlit Cloud (Recommended)
 
@@ -82,7 +84,7 @@ Your application will be live on its own `.streamlit.app` URL.
 - **AI-Powered Chatbot**: Get plain-English answers to your questions about digital divide policies.
 - **Predictive Modeling**: Use a Random Forest regression model to predict digital inclusion metrics and understand key drivers through feature importance analysis.
 - **Modern, Clean UI**: A professional and responsive interface built for clarity and ease of use.
->>>>>>> origin/main
+  > > > > > > > origin/main
 
 ## 🏗️ Project Structure
 
@@ -122,6 +124,7 @@ Your application will be live on its own `.streamlit.app` URL.
 ## 🛠️ Technology Stack
 
 <<<<<<< HEAD
+
 - **Frontend**: Streamlit with custom CSS/JS
 - **Charts**: Plotly for interactive visualizations
 - **Styling**: Modern glassmorphism design
@@ -204,8 +207,7 @@ This generates:
 
 - Feature importance plots (`plots/feature_importance.png`)
 - Trained model file (`models/regression_model.pkl`)
-- Detailed console output with model performance
-=======
+- # Detailed console output with model performance
 - **Frontend**: Streamlit
 - **Data Analysis & ML**: Pandas, Scikit-learn, Matplotlib, Seaborn
 - **Visualizations**: Plotly for interactive charts
@@ -224,4 +226,5 @@ The application runs with a mock API client by default, using realistic sample d
 ---
 
 This project was built to provide actionable insights into digital equity and the policies that shape it.
->>>>>>> origin/main
+
+> > > > > > > origin/main
